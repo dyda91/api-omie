@@ -1,34 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block body %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- <div class="container w-50 d-flex justify-content-center align-items-center">
+    <form method="POST" action="{{url_for('busca')}}" class="input-group">
+        <input type="search" class="form-control" placeholder="Pesquisar por item" name="search"
+            aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
+        <div class="input-group-append">
+            <button class="btn btn-success" type="submit">Buscar</button>
+        </div>
 
-</head>
+    </form>
+</div>
 
-<body>
+<div class="input-group mb-3 d-flex justify-content-end">
+    <form method="POST" action="{{url_for('estrutura')}}" class="input-group w-50">
+        <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="estrutura"
+            aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
+        <div class="input-group-append">
+            <button class="btn btn-success ms-1" type="submit">Buscar</button>
+        </div>
 
-    <div class="container w-50 d-flex justify-content-center align-items-center">
-        <form method="POST" action="{{url_for('busca')}}" class="input-group">
-            <input type="search" class="form-control" placeholder="Pesquisar por item" name="search"
-                aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
-            <div class="input-group-append">
-                <button class="btn btn-success" type="submit">Buscar</button>
-            </div>
-
-        </form>
-    </div>
-
-   
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='script.js')}}"></script>
-</body>
-
-</html>
+    </form>
+</div> -->
+<main class="cards">
+    <section class="card contact">
+        <div class="icon">
+            <img src="{{ url_for('static', filename='images/list-check.svg')}}" alt="lista de itens">
+        </div>
+        <h3>Lista de itens</h3>
+        <span>Visualizar, acessar e editar itens</span>
+        <a href="{{ url_for('itens')}}"><button>Acessar</button></a>
+    </section>
+    <section class="card shop">
+        <div class="icon">
+            <img src="{{ url_for('static', filename='images/pencil-square.svg')}}" alt="Gerenciamento de ops">
+        </div>
+        <h3>Controle de OPs</h3>
+        <span>Gerenciar ordens de produção</span>
+        <a href="{{ url_for('itens')}}"><button>Acessar</button></a>
+    </section>
+    <section class="card about">
+        <div class="icon">
+            <img src="{{ url_for('static', filename='images/inboxes.svg')}}" alt="gerenciar estoque">
+        </div>
+        <h3>Controle de estoque</h3>
+        <span>Gerenciamento de estoque</span>
+        <button>Acessar</button>
+    </section>
+</main>
+{% endblock %}

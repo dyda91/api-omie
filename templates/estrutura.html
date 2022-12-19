@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+<div class="container w-75">
+
+    <div class="input-group mb-3 d-flex justify-content-end">
+        <form method="POST" action="{{url_for('estrutura')}}" class="input-group w-50">
+            <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="estrutura"
+                aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
+            <div class="input-group-append">
+                <button class="btn btn-success ms-1" type="submit">Buscar</button>
+            </div>
+
+        </form>
+    </div>
+
+    <table class="table table-striped">
+
+        <tr class="bg-info">
+            <td>{{ estrutura.get("ident").get("codProduto")}}</td>
+            <td>{{ estrutura.get("ident").get("descrFamilia")}}</td>
+            <td>{{ estrutura.get("ident").get("descrProduto")}}</td>
+            <td>{{ estrutura.get("ident").get("unidProduto")}}</td>
+        </tr>
+
+    </table>
+    <div style=" overflow-x: auto;">
+        <table class="table table-striped" style="white-space: nowrap;">
+            <tr class="bg-secondary">
+                <td>Desc. Familia</td>
+                <td>Desc. Produto</td>
+                <td>Id. Familia</td>
+                <td>Id. Malha</td>
+                <td>Id. Produto</td>
+                <td>intProdMalha</td>
+                <td>Perc. Perda</td>
+                <td>Peso Bruto</td>
+                <td>Peso Liquido</td>
+                <td>Quant. Produto</td>
+                <td>Tipo Produto</td>
+                <td>uAltProdMalha</td>
+                <td>uIncProdMalha</td>
+                <td>unidProdMalha</td>
+            </tr>
+            {%for row in estrutura["itens"]%}
+            <tbody id="myTable">
+                <td>{{ row.get("descrFamMalha")}}</td>
+                <td>{{ row.get("descrProdMalha")}}</td>
+                <td>{{ row.get("idFamMalha")}}</td>
+                <td>{{ row.get("idMalha")}}</td>
+                <td>{{ row.get("idProdMalha")}}</td>
+                <td>{{ row.get("intProdMalha")}}</td>
+                <td>{{ row.get("percPerdaProdMalha")}}</td>
+                <td>{{ row.get("pesoBrutoProdMalha")}}</td>
+                <td>{{ row.get("pesoLiqProdMalha")}}</td>
+                <td>{{ row.get("quantProdMalha")}}</td>
+                <td>{{ row.get("tipoProdMalha")}}</td>
+                <td>{{ row.get("uAltProdMalha")}}</td>
+                <td>{{ row.get("uIncProdMalha")}}</td>
+                <td>{{ row.get("unidProdMalha")}}</td>
+            </tbody>
+            {%endfor%}
+        </table>
+    </div>
+</div>
+
+{% endblock %}
