@@ -10,6 +10,7 @@
                 aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
             <div class="input-group-append">
                 <button class="btn btn-success ms-1" type="submit">Buscar</button>
+                <a href="{{url_for('itens')}}" type="button" class="btn btn-success ms-2">Lista de itens</a>
             </div>
 
         </form>
@@ -18,10 +19,15 @@
     <table class="table table-striped">
 
         <tr class="bg-info">
-            <td>{{ estrutura.get("ident").get("codProduto")}}</td>
-            <td>{{ estrutura.get("ident").get("descrFamilia")}}</td>
-            <td>{{ estrutura.get("ident").get("descrProduto")}}</td>
-            <td>{{ estrutura.get("ident").get("unidProduto")}}</td>
+           {% if estrutura.get('ident') == None %}
+                <h1>Item sem estrutura cadastrada</h1>
+            
+            {%else%}
+                <td>{{ estrutura.get("ident").get("codProduto")}}</td>
+                <td>{{ estrutura.get("ident").get("descrFamilia")}}</td>
+                <td>{{ estrutura.get("ident").get("descrProduto")}}</td>
+                <td>{{ estrutura.get("ident").get("unidProduto")}}</td>
+            {%endif%}
         </tr>
 
     </table>

@@ -18,27 +18,55 @@
                     
                         </form>
                     </div>
+
+                    <div class="container w-100">
+
+                        {% with messages=get_flashed_messages(with_categories=true) %}
+                        {%if messages%}
+                        {%for category, message in messages%}
+                        <div class="alert alert-success">
+                            {{message}}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                        </div>
+                        {%endfor%}
+                        {%endif%}
+                        {%endwith%}
+                    </div>
                 </div>
                 <div class=" mh-50" style="overflow:auto; height: 60vh;">
                     
-                    <table class="table table-hover table-info border border-dark">
+                    <table class="table table-hover table-dark">
 
-                        <tr class="table-success">
+                        <tr>
                             <th>Código</th>
                             <th>Descrição</th>
                             <th>Código NCM</th>
                             <th>Unidade</th>
                             <th>Alterado por:</th>
+                            <th>Ação</th>
                         </tr>
 
 
                         {%for row in lista_itens["produto_servico_cadastro"]%}
+                        
                         <tr>
                             <td>{{row.get("codigo")}}</td>
                             <td>{{row.get("descricao")}}</td>
                             <td>{{row.get("ncm")}}</td>
                             <td>{{row.get("unidade")}}</td>
                             <td>{{row.get("info").get("uAlt")}}</td>
+                            <td>
+                                <form action="{{ url_for('estrutura') }}" method="post"  class="btn btn-info btn-xs" >
+                                    <button name="foo"  value="{{row.get('codigo')}}" ><img
+                                        src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button></form>
+                                <a href="update" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
+                                    data-bs-target="#edit_item_Modal"><img
+                                        src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt=""></a>
+                                <a href="delete/{{row.codigo}}" class="btn btn-danger btn-xs"
+                                    onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
+                                        src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt=""></a>
+                            </td>
 
                         </tr>
 
