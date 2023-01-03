@@ -61,7 +61,7 @@
                                     <button name="foo"  value="{{row.get('codigo')}}" ><img
                                         src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button></form>
                                 <a href="update" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
-                                    data-bs-target="#edit_item_Modal"><img
+                                    data-bs-target="#edit_item_Modal{{row.get('codigo')}}"><img
                                         src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt=""></a>
                                 <a href="delete/{{row.codigo}}" class="btn btn-danger btn-xs"
                                     onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
@@ -69,7 +69,7 @@
                             </td>
 
                         </tr>
-
+                        {% include 'edit_modal.html' %}
                         {%endfor%}
                     </table>
 

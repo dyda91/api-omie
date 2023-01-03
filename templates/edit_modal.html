@@ -2,7 +2,7 @@
 {% block body %}
 
 <!-- Editar Item Modal -->
-<div class="modal fade" id="edit_item_Modal{{row.codigo}}" role="dialog" data-bs-backdrop="static">
+<div class="modal fade" id="edit_item_Modal{{row.get('codigo')}}" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,15 +16,15 @@
                     
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Descrição:</label>
-                        <input type="text" class="form-control" name="descricao" value="{{row.codigo}}" required>
+                        <input type="text" class="form-control" name="descricao" value="{{row.get('descricao')}}" required>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Item:</label>
-                        <input type="text" class="form-control" name="item" value="{{row.descrição}}" required>
+                        <input type="text" class="form-control" name="item" value="{{row.get('codigo')}}" required>
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Codigo-item:</label>
-                        <input type="text" class="form-control" name="codigo_item" value="{{row.unidade}}" required>
+                        <label for="recipient-name" class="col-form-label">Unuidade:</label>
+                        <input type="text" class="form-control" name="codigo_item" value="{{row.get('unidade')}}" required>
                     </div>
                     <div class="modal-footer mt-3">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
