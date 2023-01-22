@@ -58,7 +58,7 @@
                             <td>{{row.get("info").get("uAlt")}}</td>
                             <td>
                                 <form action="{{ url_for('estrutura') }}" method="post"  class="btn btn-info btn-xs" >
-                                    <button name="foo"  value="{{row.get('codigo')}}" ><img
+                                    <button name="item"  value="{{row.get('codigo')}}" ><img
                                         src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button></form>
                                 <a href="update" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
                                     data-bs-target="#edit_item_Modal{{row.get('codigo')}}"><img

@@ -37,7 +37,7 @@
         </div>
         <h3>Controle de OPs</h3>
         <span>Gerenciar ordens de produção</span>
-        <a href="{{ url_for('itens')}}"><button>Acessar</button></a>
+        <a href="{{ url_for('ordens_producao')}}"><button>Acessar</button></a>
     </section>
     <section class="card about">
         <div class="icon">
@@ -45,7 +45,7 @@
         </div>
         <h3>Controle de estoque</h3>
         <span>Gerenciamento de estoque</span>
-        <button>Acessar</button>
+        <a href="{{ url_for('consulta_estoque')}}"><button>Acessar</button></a>
     </section>
 </main>
 {% endblock %}

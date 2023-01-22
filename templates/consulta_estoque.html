@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="p-3">
+                <div style="height: 10vh; width: 100%;">
+                    <div class="container w-50 d-flex justify-content-center align-items-center">
+                        <form method="POST" action="{{url_for('estoque')}}" class="input-group">
+                            <input type="search" class="form-control" placeholder="Pesquisar por item" name="estoque"
+                                aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
+                            <div class="input-group-append">
+                                <button class="btn btn-success" type="submit">Buscar</button>
+                                <a href="{{url_for('index')}}" type="button" class="btn btn-success ms-2">Página Inicial</a>
+                            </div>
+                    
+                        </form>
+                    </div>
+
+                    <div class="container w-100">
+
+                        {% with messages=get_flashed_messages(with_categories=true) %}
+                        {%if messages%}
+                        {%for category, message in messages%}
+                        <div class="alert alert-success">
+                            {{message}}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                        </div>
+                        {%endfor%}
+                        {%endif%}
+                        {%endwith%}
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

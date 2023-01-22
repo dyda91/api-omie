@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="p-3">
+                <div class="input-group mb-3 d-flex justify-content-end">
+                    <form method="POST" action="{{url_for('busca')}}" class="input-group w-25">
+                    <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="search" aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
+                    <div class="input-group-append">
+                      <button class="btn btn-success ms-1" type="submit">Buscar</button>
+                    </div>
+                </form>
+                </div>
+                <h2>Gerenciar <strong>Ops</strong>
+                   
+                    <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
+                    data-bs-target="#add_op_Modal">Adcionar
+                        item</button>
+                </h2>
+
+                
+                <div class="border-top my-2"></div>
+
+                <div class="container w-100">
+
+                    {% with messages=get_flashed_messages(with_categories=true) %}
+                    {%if messages%}
+                    {%for category, message in messages%}
+                    <div class="alert alert-success">
+                        {{message}}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                    {%endfor%}
+                    {%endif%}
+                    {%endwith%}
+                </div>
+
+
+
+                <table class="table table-hover table-dark">
+
+                    <tr>                        
+                        <th>Numero da OP</th>
+                        <th>Situação</th>
+                        <th>Item</th>
+                        <th>Descrição</th>
+                        <th>Quantidade</th>   
+                    </tr>
+
+
+                    {% for row in itens.items %}
+                    <tr>                      
+                        <td>{{row.numero_op}}</td>
+                        <td>{{row.situação}}</td>
+                        <td>{{row.item}}</td>
+                        <td>{{row.descrição}}</td> 
+                        <td>{{row.quantidade}}</td> 
+                        <td>
+                            <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
+                                data-bs-target="#edit_op_modal{{row.id}}"><img
+                                    src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt=""></a>
+                            <a href="delete_op/{{row.id}}" class="btn btn-danger btn-xs"
+                                onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
+                                    src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt=""></a>
+                            <form action="{{ url_for('estrutura_op') }}" method="post"  class="btn btn-info btn-xs" >
+                                <button name="item"  value="{{row.item}}" ><img
+                                src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button>
+                            </form>
+                        </td>
+                    </tr>
+
+
+                    {% include 'edit_modal.html' %}
+                    {% endfor %}
+                </table>
+                {% include 'add_modal.html' %}
+
+                {% for page_num in itens.iter_pages(left_edge=1, right_edge=1,
+                    left_current=1, right_current=2) %} {% if page_num %} {% if itens.page ==
+                    page_num %}
+                    <a
+                      class="btn btn-dark mb-4"
+                      href="{{ url_for('index', page=page_num) }}"
+                      >{{ page_num }}</a
+                    >
+                    {% else %}
+                    <a
+                      class="btn btn-outline-dark mb-4"
+                      href="{{ url_for('index', page=page_num) }}"
+                      >{{ page_num }}</a
+                    >
+                    {% endif %} {% else %} ... {% endif %} {% endfor %}
+             
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
