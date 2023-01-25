@@ -14,6 +14,7 @@ busca_data = "14/01/2023"
 url_produtos = "https://app.omie.com.br/api/v1/geral/produtos/"
 url_estrutura = "https://app.omie.com.br/api/v1/geral/malha/"
 url_consulta_estoque = "https://app.omie.com.br/api/v1/estoque/resumo/"
+situacao_op = "aberta"
 
 
 
@@ -66,7 +67,7 @@ def estrutura():
 
 @app.route('/itens', methods = ['GET','POST'])
 def itens():
-    pagina = 77
+    pagina = 78
     data = {
         "call":"ListarProdutos",
         "app_key": app_key,
@@ -135,10 +136,20 @@ def ordens_producao():
 @app.route('/insert_op', methods=['POST'])
 def insert_op():     
      if request.method == 'POST':
-        numero_op = request.form.get("numero_op")
-        situação = request.form.get("situacao")
         item = request.form.get("item")
-        descrição = request.form.get("descricao")
+        data = {
+                "call":"ConsultarProduto",
+                "app_key": app_key,
+                "app_secret": app_secret,
+                "param":[{
+                    "codigo": item
+                    }
+                ]}
+        response = requests.post(url=url_produtos, json=data)
+        data_resp = response.json()
+        numero_op = request.form.get("numero_op")
+        situação = situacao_op        
+        descrição = data_resp.get("descricao")
         quantidade = request.form.get("quantidade")
 
         novo_item = Ops(numero_op=numero_op, situação=situação, item=item, descrição=descrição, quantidade=quantidade)
@@ -154,13 +165,11 @@ def insert_op():
 def update_op():
     
     if request.method == 'POST':
-        edit_item = Ops.query.get(request.form.get('id'))
-
-        edit_item.numero_op = request.form.get("numero_op")   
-        edit_item.situação = request.form.get("situacao")
+        edit_item = Ops.query.get(request.form.get('id'))  
         edit_item.item = request.form.get("item")
         edit_item.descrição = request.form.get("descricao")
         edit_item.quantidade = request.form.get("quantidade")
+
         db.session.commit()
         
         flash (f'Item editado com sucesso', category='soccess')
@@ -168,6 +177,19 @@ def update_op():
         return redirect(url_for('ordens_producao'))
         
 
+
+# @app.route('/encerrar_op', methods=['GET', 'POST'])
+# def encerrar_op():
+#     id = request.form.get('id')
+#     if request.method == 'POST':
+#         edit_item = Ops.query.get(id)  
+#         edit_item.situação = request.form.get("situacao")
+
+#         db.session.commit()
+        
+#         flash (f'Item editado com sucesso', category='soccess')
+
+#         return redirect(url_for('ordens_producao'))
 # @app.route('/busca_op', methods=['GET', 'POST'])
 # def busca():
 #     if request.method == 'POST':
@@ -196,7 +218,6 @@ def delete(id):
 @app.route('/estrutura_op', methods = ['GET','POST'])
 def estrutura_op():
     item = request.form['item']
-    
     if request.method == 'POST':  
         data = {
                 "call":"ConsultarEstrutura",
@@ -208,8 +229,11 @@ def estrutura_op():
                 ]}
         response = requests.post(url=url_estrutura, json=data)
         estrutura_op = response.json()
-        
-        return render_template("estrutura_op.html", estrutura_op=estrutura_op)
+
+        for row in estrutura_op["itens"]:
+            row = row.get("quantProdMalha") + 0.0001
+
+        return render_template("estrutura_op.html", estrutura_op=estrutura_op, qtd = row )
 
 
 

@@ -15,21 +15,6 @@
                     <input type="hidden" name="id" value="{{row.id}}">
 
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">numero_op</label>
-                        <input type="number" class="form-control" name="numero_op" value="{{row.numero_op}}" required>
-                    </div>
-                    <div class="form-group">
-
-                        <label for="recipient-name" class="col-form-label">Situação:</label>
-
-                        <select class="form-control" name="situacao">
-                            <option value="Aberta" selected>Aberta</option>
-                            <option value="Encerrada">Encerrada</option>
-                        </select>
-
-                    </div>
-
-                    <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Item:</label>
                         <input type="text" class="form-control" name="item" value="{{row.item}}" required>
                     </div>
@@ -43,6 +28,7 @@
                         <label for="recipient-name" class="col-form-label">quantidade</label>
                         <input type="text" class="form-control" name="quantidade" value="{{row.quantidade}}" required>
                     </div>
+                    
                     <div class="modal-footer mt-3">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                         <button type="submit" class="btn btn-primary">Salvar alterações</button>
@@ -55,51 +41,5 @@
     </div>
 </div>
 
-<!-- /Editar Item Modal -->
-
-
-<div class="modal fade" id="add_item_Modal"  role="dialog" data-bs-backdrop="static">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Adcionar Item</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="insert" method="POST" class="submit">
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Situação:</label>
-
-                        <select name="situacao" class="form-control">
-                            <option value="Ativo" selected>Ativo</option>
-                            <option value="Desativado">Desativado</option>
-                        </select>
-
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Descrição:</label>
-                        <input type="text" name="descricao" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Item:</label>
-                        <input type="text" name="item" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Codigo-item:</label>
-                        <input type="text" name="codigo_item" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Cadastrar
-                            item</button>
-                    </div>
-                </form>
-
-            </div>
-            
-        </div>
-    </div>
-</div>
 
 {% endblock %}

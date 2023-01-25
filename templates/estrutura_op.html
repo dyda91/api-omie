@@ -60,7 +60,7 @@
                 <td>{{ row.get("percPerdaProdMalha")}}</td>
                 <td>{{ row.get("pesoBrutoProdMalha")}}</td>
                 <td>{{ row.get("pesoLiqProdMalha")}}</td>
-                <td>{{ row.get("quantProdMalha")}}</td>
+                <td><input type="number" value="{{ row.get('quantProdMalha')}}"></td>
                 <td>{{ row.get("tipoProdMalha")}}</td>
                 <td>{{ row.get("uAltProdMalha")}}</td>
                 <td>{{ row.get("uIncProdMalha")}}</td>
@@ -68,6 +68,8 @@
             </tbody>
             {%endfor%}
         </table>
+
+       
     </div>
 </div>
 
