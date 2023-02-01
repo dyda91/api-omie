@@ -23,10 +23,10 @@
                 <h1>Item sem estrutura cadastrada</h1>
             
             {%else%}
-                <td>{{ estrutura_op.get("ident").get("codProduto")}}</td>
-                <td>{{ estrutura_op.get("ident").get("descrFamilia")}}</td>
-                <td>{{ estrutura_op.get("ident").get("descrProduto")}}</td>
-                <td>{{ estrutura_op.get("ident").get("unidProduto")}}</td>
+                <td>OP Nº = {{ ref[0] }}</td>
+                <td>Item = {{ ref[1] }}</td>
+                <td>Descrição = {{ ref[2] }}</td>
+                <td>Quantidade da op = {{ ref[3] }}</td>
             {%endif%}
         </tr>
 
@@ -51,6 +51,7 @@
             </tr>
             {%for row in estrutura_op["itens"]%}
             <tbody id="myTable">
+                
                 <td>{{ row.get("descrFamMalha")}}</td>
                 <td>{{ row.get("descrProdMalha")}}</td>
                 <td>{{ row.get("idFamMalha")}}</td>
@@ -60,17 +61,25 @@
                 <td>{{ row.get("percPerdaProdMalha")}}</td>
                 <td>{{ row.get("pesoBrutoProdMalha")}}</td>
                 <td>{{ row.get("pesoLiqProdMalha")}}</td>
-                <td><input type="number" value="{{ row.get('quantProdMalha')}}"></td>
+                <td><input type="float" id="qtd_value" value="{{ row.get('quantProdMalha') }}"></td>
                 <td>{{ row.get("tipoProdMalha")}}</td>
                 <td>{{ row.get("uAltProdMalha")}}</td>
                 <td>{{ row.get("uIncProdMalha")}}</td>
                 <td>{{ row.get("unidProdMalha")}}</td>
+                
             </tbody>
             {%endfor%}
         </table>
-
+            <form action="{{ url_for('movimento_estoque') }}" method="post">
+                <input type="hidden" name="item" value="{{ ref[1] }}">
+                <input type="hidden" name="id" value="{{ ref[0] }}">
+                <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
+                <button type="submit" class="btn btn-success ms-2">Encerrar Op</button>
+            </form>
        
     </div>
+    
+
 </div>
 
 {% endblock %}

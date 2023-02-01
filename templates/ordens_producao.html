@@ -41,14 +41,16 @@
 
 
 
-                <table class="table table-hover table-dark">
+                <table class="table table-hover table-info">
 
                     <tr>                        
                         <th>Numero da OP</th>
                         <th>Situação</th>
                         <th>Item</th>
                         <th>Descrição</th>
-                        <th>Quantidade</th>   
+                        <th>Quantidade</th>  
+                        <th>Data</th>
+                        <th>Hora</th> 
                     </tr>
 
 
@@ -59,6 +61,8 @@
                         <td>{{row.item}}</td>
                         <td>{{row.descrição}}</td> 
                         <td>{{row.quantidade}}</td> 
+                        <td>{{row.data_abertura}}</td> 
+                        <td>{{row.hora_abertura}}</td> 
                         <td>
                             <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
                                 data-bs-target="#edit_op_modal{{row.id}}"><img
@@ -67,7 +71,11 @@
                                 onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
                                     src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt=""></a>
                             <form action="{{ url_for('estrutura_op') }}" method="post"  class="btn btn-info btn-xs" >
-                                <button name="item"  value="{{row.item}}" ><img
+                                <input type="hidden" name="item" value="{{row.item}}">
+                                <input type="hidden" name="id" value="{{row.id}}">
+                                <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
+                                <input type="hidden" name="descricao" value="{{row.descrição}}">
+                                <button type="submit"><img
                                 src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button>
                             </form>
                         </td>
@@ -77,6 +85,7 @@
                     {% include 'edit_modal.html' %}
                     {% endfor %}
                 </table>
+
                 {% include 'add_modal.html' %}
 
                 {% for page_num in itens.iter_pages(left_edge=1, right_edge=1,
