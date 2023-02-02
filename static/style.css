@@ -9,7 +9,6 @@ body {
     background: #F6F9FF;
     height: 100vh;
     width: 100%;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,6 +16,11 @@ body {
     color: #434343;
 
     font-size: 16px;
+}
+
+table{
+    white-space: nowrap;
+    font-size: 13px;
 }
 
 main.cards {

@@ -117,6 +117,20 @@ def estoque():
 
         return  render_template('estoque.html',  estoque = estoque)
 
+
+@app.route('/lista_movimento', methods = ['GET','POST'])
+def lista_movimento():
+    page = request.args.get('page', 1, type=int)
+    dados = Movimentos_estoque.query.paginate(page=page,per_page=20)
+    return  render_template('lista_movimento.html',  movimentos = dados)
+
+@app.route('/lista_movimento_filtro', methods = ['GET','POST'])
+def lista_movimento_filtro():
+    data_movimento = request.form.get("data_movimento")
+    filtro = Movimentos_estoque.query.filter_by(data_movimento = data_movimento).all()
+    
+    return  render_template('lista_movimento_filtro.html', filtro = filtro)
+
 # =======================================================================================
 
 
@@ -130,7 +144,7 @@ def ordens_producao():
 
 @app.route('/insert_op', methods=['POST'])
 def insert_op():     
-    data_atual = date.today().strftime("%d/%m/%Y")
+    data_atual = date.today().strftime("%Y-%m-%d")
     hora_atual = datetime.now().strftime("%H:%M")
     if request.method == 'POST':
         item = request.form.get("item")
