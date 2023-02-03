@@ -38,7 +38,6 @@ def busca():
 
 
 
-
 @app.route('/estrutura', methods = ['GET','POST'])
 def estrutura():
     item = request.form['item']

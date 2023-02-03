@@ -51,6 +51,7 @@
                         <th>Quantidade</th>  
                         <th>Data</th>
                         <th>Hora</th> 
+                        <th>Ações</th> 
                     </tr>
 
 
@@ -93,13 +94,13 @@
                     page_num %}
                     <a
                       class="btn btn-dark mb-4"
-                      href="{{ url_for('index', page=page_num) }}"
+                      href="{{ url_for('ordens_producao', page=page_num) }}"
                       >{{ page_num }}</a
                     >
                     {% else %}
                     <a
                       class="btn btn-outline-dark mb-4"
-                      href="{{ url_for('index', page=page_num) }}"
+                      href="{{ url_for('ordens_producao', page=page_num) }}"
                       >{{ page_num }}</a
                     >
                     {% endif %} {% else %} ... {% endif %} {% endfor %}
