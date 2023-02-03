@@ -6,17 +6,19 @@
     <div class="row">
         <div class="col md-12">
             <div class="p-3 table-responsive">
-                <div class="col  md-3">
+                <div class="col  md-3 p-3">
                     <form action="{{url_for('lista_movimento_filtro')}}" method="get">
                         <input type="date" id="data" name="data_movimento"
                         value="2023/01/01"
                         min="2023-01-01" max="2023-12-31">
 
                         <button type="submit" class="btn btn-info">Filtrar</button>
+                        <a href="{{url_for('index')}}" class="btn btn-info float-end">pagina inicial</a>
                     </form>
+                    
                 </div>
                 
-                <table class="table">
+                <table class="table table table-striped table-secondary movimento">
 
                     <tr class="table-info">                        
                         <th>Id</th>

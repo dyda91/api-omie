@@ -23,6 +23,13 @@ table{
     font-size: 13px;
 }
 
+/* table.table tbody tr td,
+table.table thead tr th,
+table.table thead {
+  border-left: 1px solid;
+  border-right: 1px solid;
+} */
+
 main.cards {
     display: flex;
     padding: 32px;
