@@ -12,17 +12,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 
     color: #434343;
 
     font-size: 16px;
 }
 
-.header{
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
+
 
 table{
     white-space: nowrap;
