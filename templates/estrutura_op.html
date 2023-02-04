@@ -6,36 +6,29 @@
 {% block body %}
 
 
-<div class="container w-75">
+<div class="container w-100 table-responsive margin-top">
 
     <div class="input-group mb-3 d-flex justify-content-end">
-        <form method="POST" action="{{url_for('estrutura_op')}}" class="input-group w-50">
-            <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="estrutura_op"
-                aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
-            <div class="input-group-append">
-                <button class="btn btn-success ms-1" type="submit">Buscar</button>
-                <a href="{{url_for('itens')}}" type="button" class="btn btn-success ms-2">Lista de itens</a>
-            </div>
-
-        </form>
+        <div class="input-group-append">
+            <a href="{{url_for('ordens_producao')}}" type="button" class="btn btn-success ms-2">Voltar</a>
+        </div>
     </div>
 
     <table class="table table-striped">
 
-        <tr class="bg-info">
+        <tr class="bg-info info_estrutura">
            {% if estrutura_op.get('ident') == None %}
                 <h1>Item sem estrutura cadastrada</h1>
             
             {%else%}
                 <td>OP Nº = {{ ref[0] }}</td>
                 <td>Item = {{ ref[1] }}</td>
-                <td>Descrição = {{ ref[2] }}</td>
-                <td>Quantidade da op = {{ ref[3] }}</td>
+                <td>Qtd. OP: = {{ ref[3] }}</td>
             {%endif%}
         </tr>
 
     </table>
-    <div class="container_table">
+    <div class="container_table table-responsive">
         <table class="table table-striped">
             <tr class="bg-secondary">
                 <td>Desc. Familia</td>

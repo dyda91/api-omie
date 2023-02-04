@@ -6,7 +6,7 @@
 {% block body %}
 
 
-<div class="container">
+<div class="container margin-top">
     <div class="row">
         <div class="col md-12">
             <div class="p-1">
@@ -49,7 +49,7 @@
                 <table class="table table-hover table-info">
 
                     <tr>                        
-                        <th>Numero da OP</th>
+                        <th> OP</th>
                         <th>Situação</th>
                         <th>Item</th>
                         <th>Descrição</th>
@@ -61,6 +61,7 @@
 
 
                     {% for row in itens.items %}
+                    
                     <tr>                      
                         <td>{{row.id}}</td>
                         <td>{{row.situação}}</td>
@@ -70,20 +71,30 @@
                         <td>{{row.data_abertura}}</td> 
                         <td>{{row.hora_abertura}}</td> 
                         <td>
-                            <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
-                                data-bs-target="#edit_op_modal{{row.id}}"><img
-                                    src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt=""></a>
-                            <a href="delete_op/{{row.id}}" class="btn btn-danger btn-xs"
-                                onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
-                                    src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt=""></a>
-                            <form action="{{ url_for('estrutura_op') }}" method="post"  class="btn btn-info btn-xs" >
-                                <input type="hidden" name="item" value="{{row.item}}">
-                                <input type="hidden" name="id" value="{{row.id}}">
-                                <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
-                                <input type="hidden" name="descricao" value="{{row.descrição}}">
-                                <button type="submit"><img
-                                src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button>
-                            </form>
+                            <div  class="icons">
+                                <div>
+                                    <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
+                                        data-bs-target="#edit_op_modal{{row.id}}"><img
+                                        src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="delete_op/{{row.id}}" class="btn btn-danger btn-xs"
+                                        onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
+                                            src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt="">
+                                    </a>
+                                </div>
+                                <div>           
+                                    <form action="{{ url_for('estrutura_op') }}" method="post" type="hidden" id="myForm">
+                                                <input type="hidden" name="item" value="{{row.item}}">
+                                                <input type="hidden" name="id" value="{{row.id}}">
+                                                <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
+                                                <input type="hidden" name="descricao" value="{{row.descrição}}">     
+                                                <button type="submit" for="myForm" class="btn btn-info btn-xs"><img
+                                        src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button>                           
+                                    </form>
+                                </div>
+                            </div>
                         </td>
                     </tr>
 

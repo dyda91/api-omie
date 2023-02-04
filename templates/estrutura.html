@@ -6,36 +6,32 @@
 {% block body %}
 
 
-<div class="container w-75">
+<div class="container w-100">
 
     <div class="input-group mb-3 d-flex justify-content-end">
-        <form method="POST" action="{{url_for('estrutura')}}" class="input-group w-50">
-            <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="estrutura"
-                aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
-            <div class="input-group-append">
-                <button class="btn btn-success ms-1" type="submit">Buscar</button>
-                <a href="{{url_for('itens')}}" type="button" class="btn btn-success ms-2">Lista de itens</a>
-            </div>
-
-        </form>
+       
+        <div class="input-group-append">
+            <a href="{{url_for('itens')}}" type="button" class="btn btn-success ms-2">Voltar</a>
+        </div>
     </div>
 
-    <table class="table table-striped">
-
-        <tr class="bg-info">
-           {% if estrutura.get('ident') == None %}
-                <h1>Item sem estrutura cadastrada</h1>
-            
-            {%else%}
-                <td>{{ estrutura.get("ident").get("codProduto")}}</td>
-                <td>{{ estrutura.get("ident").get("descrFamilia")}}</td>
-                <td>{{ estrutura.get("ident").get("descrProduto")}}</td>
-                <td>{{ estrutura.get("ident").get("unidProduto")}}</td>
-            {%endif%}
-        </tr>
-
-    </table>
     <div style=" overflow-x: auto;">
+        <table class="table table-striped w-100">
+
+            <tr class="bg-info">
+            {% if estrutura.get('ident') == None %}
+                    <h1>Item sem estrutura cadastrada</h1>
+                
+                {%else%}
+                    <td>{{ estrutura.get("ident").get("codProduto")}}</td>
+                    <td>{{ estrutura.get("ident").get("descrFamilia")}}</td>
+                    <td>{{ estrutura.get("ident").get("descrProduto")}}</td>
+                    <td>{{ estrutura.get("ident").get("unidProduto")}}</td>
+                {%endif%}
+            </tr>
+
+        </table>
+    
         <table class="table table-striped" style="white-space: nowrap;">
             <tr class="bg-secondary">
                 <td>Desc. Familia</td>
