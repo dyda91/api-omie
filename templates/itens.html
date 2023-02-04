@@ -63,15 +63,26 @@
                             <td>{{row.get("unidade")}}</td>
                             <td>{{row.get("info").get("uAlt")}}</td>
                             <td>
-                                <form action="{{ url_for('estrutura') }}" method="post"  class="btn btn-info btn-xs" >
-                                    <button name="item"  value="{{row.get('codigo')}}" ><img
-                                        src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button></form>
-                                <a href="update" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
-                                    data-bs-target="#edit_item_Modal{{row.get('codigo')}}"><img
-                                        src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt=""></a>
-                                <a href="delete/{{row.codigo}}" class="btn btn-danger btn-xs"
-                                    onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
-                                        src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt=""></a>
+                                <div  class="icons">
+                                    <div>
+                                        <form action="{{ url_for('estrutura') }}" method="post" type="hidden">
+                                            <button name="item"  value="{{row.get('codigo')}}" class="btn btn-info btn-xs" ><img
+                                                src="{{url_for('static', filename='images/card-list.svg')}}" alt=""></button>
+                                        </form>
+                                    </div>
+                                    <div>
+                                        <a href="update" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
+                                            data-bs-target="#edit_item_Modal{{row.get('codigo')}}"><img
+                                                src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="delete/{{row.codigo}}" class="btn btn-danger btn-xs"
+                                            onclick="return confirm('Tem certeza que quer deletar este item ?')"><img
+                                                src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt="">
+                                        </a>
+                                    </div>
+                                </div>
                             </td>
 
                         </tr>

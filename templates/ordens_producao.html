@@ -85,7 +85,7 @@
                                     </a>
                                 </div>
                                 <div>           
-                                    <form action="{{ url_for('estrutura_op') }}" method="post" type="hidden" id="myForm">
+                                    <form action="{{ url_for('estrutura_op') }}" method="post" type="hidden" >
                                                 <input type="hidden" name="item" value="{{row.item}}">
                                                 <input type="hidden" name="id" value="{{row.id}}">
                                                 <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
