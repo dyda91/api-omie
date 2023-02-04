@@ -121,7 +121,7 @@ def estoque():
 @app.route('/lista_movimento', methods = ['GET','POST'])
 def lista_movimento():
     page = request.args.get('page', 1, type=int)
-    dados = Movimentos_estoque.query.paginate(page=page,per_page=15)
+    dados = Movimentos_estoque.query.paginate(page=page,per_page=20)
     return  render_template('lista_movimento.html',  movimentos = dados)
 
 @app.route('/lista_movimento_filtro', methods = ['GET','POST'])
