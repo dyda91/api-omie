@@ -19,6 +19,9 @@ body {
     font-size: 16px;
 }
 
+.header{
+    height: 8vh;
+}
 
 
 table{
@@ -124,7 +127,7 @@ main.cards section.card.about {
 
     main.cards section.card {
         margin-left: 0;
-        margin-bottom: 32px;
+        margin-bottom: 10px;
     }
 
     main.cards section.card:last-child {
@@ -135,4 +138,7 @@ main.cards section.card.about {
         font-size: 70%;
     }
 
+    .cards {
+        margin-top: 8vh;
+       }
 }
