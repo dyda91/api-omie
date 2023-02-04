@@ -67,6 +67,7 @@ def itens():
         "app_secret":app_secret,
         "param":[{
             "pagina": pagina,
+            "registros_por_pagina": 50,
             "apenas_importado_api": "N",
             "filtrar_apenas_omiepdv": "N"	
             }
@@ -120,7 +121,7 @@ def estoque():
 @app.route('/lista_movimento', methods = ['GET','POST'])
 def lista_movimento():
     page = request.args.get('page', 1, type=int)
-    dados = Movimentos_estoque.query.paginate(page=page,per_page=20)
+    dados = Movimentos_estoque.query.paginate(page=page,per_page=15)
     return  render_template('lista_movimento.html',  movimentos = dados)
 
 @app.route('/lista_movimento_filtro', methods = ['GET','POST'])

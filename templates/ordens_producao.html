@@ -1,26 +1,31 @@
 {% extends 'base.html' %}
+
+{% include 'header.html' %}
+
+{% block title %} ordens de produção {% endblock %}
 {% block body %}
 
 
 <div class="container">
     <div class="row">
         <div class="col md-12">
-            <div class="p-3">
-                <div class="input-group mb-3 d-flex justify-content-end">
-                    <form method="POST" action="{{url_for('busca')}}" class="input-group w-25">
-                    <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="search" aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
-                    <div class="input-group-append">
-                      <button class="btn btn-success ms-1" type="submit">Buscar</button>
+            <div class="p-1">
+                <h2 class="d-flex justify-content-center"><strong>Gerenciar Ops</strong></h2>
+                <div class="border-top my-2"></div>
+                    <div class="input-group d-flex justify-content-end">
+                        <form method="POST" action="{{url_for('busca')}}" class="input-group w-100">
+                        <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="search" aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
+                        <div class="input-group-append">
+                        <button class="btn btn-success ms-1" type="submit">Buscar</button>
+                    </form>
                     </div>
-                </form>
+                    
+                    
+                    
+                    <button type="button" class="btn btn-success mt-1" data-bs-toggle="modal"
+                        data-bs-target="#add_op_Modal">Adcionar item</button>
+                    
                 </div>
-                <h2>Gerenciar <strong>Ops</strong>
-                   
-                    <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
-                    data-bs-target="#add_op_Modal">Adcionar
-                        item</button>
-                </h2>
-
                 
                 <div class="border-top my-2"></div>
 
@@ -39,7 +44,7 @@
                     {%endwith%}
                 </div>
 
-
+            <div class="container_table">
 
                 <table class="table table-hover table-info">
 
@@ -86,7 +91,7 @@
                     {% include 'edit_modal.html' %}
                     {% endfor %}
                 </table>
-
+            </div>
                 {% include 'add_modal.html' %}
 
                 {% for page_num in itens.iter_pages(left_edge=1, right_edge=1,
