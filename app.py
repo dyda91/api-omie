@@ -210,10 +210,11 @@ def delete(id):
 @app.route('/estrutura_op', methods = ['GET','POST'])
 def estrutura_op():
     op = request.form.get("id")
-    item = request.form.get("item")   
+    item = request.form.get("item")
     descricao = request.form.get("descricao")
     op_qtd = request.form.get("op_qtd")
     ref = [op, item, descricao, op_qtd]
+    itens_movimentados = Movimentos_estoque.query.filter_by(op_referencia = op).all()
     if request.method == 'POST':  
         data = {
                 "call":"ConsultarEstrutura",
@@ -226,86 +227,163 @@ def estrutura_op():
         response = requests.post(url=url_estrutura, json=data)
         estrutura_op = response.json()
 
+    return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, estrutura_op=estrutura_op, ref=ref)
+
+    # op = request.form.get("id")
+    # item = request.form.get("item")   
+    # descricao = request.form.get("descricao")
+    # op_qtd = request.form.get("op_qtd")
+    # ref = [op, item, descricao, op_qtd]
+    # if request.method == 'POST':  
+    #     data = {
+    #             "call":"ConsultarEstrutura",
+    #             "app_key": app_key,
+    #             "app_secret": app_secret,
+    #             "param":[{
+    #                 "codProduto": item
+    #                     }
+    #             ]}
+    #     response = requests.post(url=url_estrutura, json=data)
+    #     estrutura_op = response.json()
+
         
-        return render_template("estrutura_op.html", estrutura_op=estrutura_op, ref = ref)
+        # return render_template("estrutura_op.html", estrutura_op=estrutura_op, ref = ref)
 
 
 
 @app.route('/movimento_estoque', methods = ['GET','POST'])
 def movimento_estoque():
-    item = request.form.get("item")
-    op = request.form.get("id")
-    op_qtd = float(request.form.get("op_qtd"))
-      
+
     data_atual = date.today().strftime("%d/%m/%Y")
     hora_atual = datetime.now().strftime("%H:%M")
+    if request.method == 'POST':
+        op_referencia = request.form.get("op")
+        
 
-    data = {
-                "call":"ConsultarEstrutura",
-                "app_key": app_key,
-                "app_secret": app_secret,
-                "param":[{
-                    "codProduto": item
+        item_movimento = request.form.get("item")
+        quantidade_movimento = float(request.form.get("quantidade"))
+        item_referencia = request.form.get("item_referencia")
+
+        data = {
+                    "call":"ConsultarProduto",
+                    "app_key": app_key,
+                    "app_secret": app_secret,
+                    "param":[{
+                        "codigo": item_movimento
                         }
-                ]}
-    response = requests.post(url=url_estrutura, json=data)
-    estrutura = response.json()
+                    ]}
 
+        response = requests.post(url=url_produtos, json=data)
+        data_resp = response.json()
 
+        descricao = data_resp.get("descricao")
 
-    for row in estrutura["itens"]:    
+        saldo = {"call":"ObterEstoqueProduto",
+                    "app_key":app_key,
+                    "app_secret":app_secret,
+                    "param":[{
+                            "cCodigo":item_movimento,
+                            "dDia": data_atual
+                }]
+                }
 
-            real_unitario = float(row.get('quantProdMalha'))
-            quantidade_movimento = op_qtd * real_unitario
-            item_movimento = row.get("codProdMalha")
+        response = requests.post(url=url_estrutura, json=data)
+        saldo_resp = response.json()
+        saldo_anterior = float(1000000)
+        # saldo = saldo_resp["listaEstoque"][0]
+        # # saldo_anterior = float(saldo.get("nSaldo"))
 
-            saldo = {"call":"ObterEstoqueProduto",
-                 "app_key":app_key,
-                 "app_secret":app_secret,
-                 "param":[{
-                        "cCodigo":item_movimento,
-                        "dDia": data_atual
-            }]
-            }
-            response = requests.post(url=url_consulta_estoque, json=saldo)
-            saldo = response.json()
-            saldo = saldo["listaEstoque"][0]
-            saldo_anterior = float(saldo.get("nSaldo"))
+        novo_movimento = Movimentos_estoque(item_movimento=item_movimento, 
+                                            descricao=descricao, 
+                                            op_referencia=op_referencia, 
+                                            item_referencia=item_referencia, 
+                                            saldo_anterior=saldo_anterior, 
+                                            quantidade_movimento=quantidade_movimento, 
+                                            saldo_atual = saldo_anterior - quantidade_movimento,
+                                            data_movimento = data_atual,
+                                            hora_movimento = hora_atual)
 
-            movimento = Movimentos_estoque( 
-            item_movimento = item_movimento,
-            descrProdMalha = row.get("descrProdMalha"),
-            codFamMalha = row.get("codFamMalha"),
-            descrFamMalha = row.get("descrFamMalha"),
-            op_referencia = op,
-            item_referencia = item,
-            saldo_anterior = saldo_anterior,
-            quantidade_movimento =  quantidade_movimento,
-            saldo_atual = saldo_anterior - quantidade_movimento,
-            quantProdMalha = row.get('quantProdMalha'),
-            idFamMalha = row.get("idFamMalha"),
-            idMalha = row.get("idMalha"),
-            idProdMalha = row.get("idProdMalha"),
-            intProdMalha = row.get("intProdMalha"),
-            percPerdaProdMalha = row.get("percPerdaProdMalha"),
-            pesoBrutoProdMalha = row.get("pesoBrutoProdMalha"),
-            pesoLiqProdMalha = row.get("pesoLiqProdMalha"),            
-            tipoProdMalha = row.get("tipoProdMalha"),
-            uAltProdMalha = row.get("uAltProdMalha"),
-            uIncProdMalha = row.get("uIncProdMalha"),
-            unidProdMalha = row.get("unidProdMalha"),
-            data_movimento = data_atual,
-            hora_movimento = hora_atual)
+        db.session.add(novo_movimento)
+        db.session.commit()
 
-            db.session.add(movimento)
-            
+       
 
-    edita_situacao = Ops.query.get(op)
-    edita_situacao.situação = "Encerrada"
-
-    db.session.commit()
 
     return redirect(url_for('ordens_producao'))
+
+    # item = request.form.get("item")
+    # op = request.form.get("id")
+    # op_qtd = float(request.form.get("op_qtd"))
+      
+    # data_atual = date.today().strftime("%d/%m/%Y")
+    # hora_atual = datetime.now().strftime("%H:%M")
+
+    # data = {
+    #             "call":"ConsultarEstrutura",
+    #             "app_key": app_key,
+    #             "app_secret": app_secret,
+    #             "param":[{
+    #                 "codProduto": item
+    #                     }
+    #             ]}
+    # response = requests.post(url=url_estrutura, json=data)
+    # estrutura = response.json()
+
+
+
+    # # for row in estrutura["itens"]:    
+
+    # #         real_unitario = float(row.get('quantProdMalha'))
+    # #         quantidade_movimento = op_qtd * real_unitario
+    # #         item_movimento = row.get("codProdMalha")
+
+    # #         saldo = {"call":"ObterEstoqueProduto",
+    # #              "app_key":app_key,
+    # #              "app_secret":app_secret,
+    # #              "param":[{
+    # #                     "cCodigo":item_movimento,
+    # #                     "dDia": data_atual
+    # #         }]
+    # #         }
+    # #         response = requests.post(url=url_consulta_estoque, json=saldo)
+    # #         saldo = response.json()
+    # #         saldo = saldo["listaEstoque"][0]
+    # #         saldo_anterior = float(saldo.get("nSaldo"))
+
+    # #         movimento = Movimentos_estoque( 
+    # #         item_movimento = item_movimento,
+    # #         descrProdMalha = row.get("descrProdMalha"),
+    # #         codFamMalha = row.get("codFamMalha"),
+    # #         descrFamMalha = row.get("descrFamMalha"),
+    # #         op_referencia = op,
+    # #         item_referencia = item,
+    # #         saldo_anterior = saldo_anterior,
+    # #         quantidade_movimento =  quantidade_movimento,
+    # #         saldo_atual = saldo_anterior - quantidade_movimento,
+    # #         quantProdMalha = row.get('quantProdMalha'),
+    # #         idFamMalha = row.get("idFamMalha"),
+    # #         idMalha = row.get("idMalha"),
+    # #         idProdMalha = row.get("idProdMalha"),
+    # #         intProdMalha = row.get("intProdMalha"),
+    # #         percPerdaProdMalha = row.get("percPerdaProdMalha"),
+    # #         pesoBrutoProdMalha = row.get("pesoBrutoProdMalha"),
+    # #         pesoLiqProdMalha = row.get("pesoLiqProdMalha"),            
+    # #         tipoProdMalha = row.get("tipoProdMalha"),
+    # #         uAltProdMalha = row.get("uAltProdMalha"),
+    # #         uIncProdMalha = row.get("uIncProdMalha"),
+    # #         unidProdMalha = row.get("unidProdMalha"),
+    # #         data_movimento = data_atual,
+    # #         hora_movimento = hora_atual)
+
+    # #         db.session.add(movimento)
+            
+
+    # edita_situacao = Ops.query.get(op)
+    # edita_situacao.situação = "Encerrada"
+
+    # db.session.commit()
+
+    # return redirect(url_for('ordens_producao'), itens_movimentados = itens_movimentados)
 
 
 if __name__ == "__main__":

@@ -42,55 +42,25 @@ class Movimentos_estoque(db.Model):
     __tablename__='movimentos_estoque'
     id = db.Column(db.Integer, primary_key=True)
     item_movimento = db.Column(db.String)
-    descrProdMalha = db.Column(db.String)
-    codFamMalha = db.Column(db.String)
-    descrFamMalha = db.Column(db.String)
+    descricao = db.Column(db.String)
     op_referencia = db.Column(db.Integer, db.ForeignKey('ops.numero_op'))
     item_referencia = db.Column(db.String)
     saldo_anterior = db.Column(db.Integer)
     quantidade_movimento = db.Column(db.Integer)
     saldo_atual = db.Column(db.Integer)
-    quantProdMalha = db.Column(db.Integer)
-    idFamMalha = db.Column(db.Integer)
-    idMalha = db.Column(db.Integer)
-    idProdMalha = db.Column(db.Integer)
-    intProdMalha = db.Column(db.String)
-    percPerdaProdMalha = db.Column(db.Integer)
-    pesoBrutoProdMalha = db.Column(db.Integer)
-    pesoLiqProdMalha = db.Column(db.Integer)   
-    tipoProdMalha = db.Column(db.String)
-    uAltProdMalha = db.Column(db.String)
-    uIncProdMalha = db.Column(db.String)
-    unidProdMalha = db.Column(db.String)
     data_movimento = db.Column(db.String)
     hora_movimento = db.Column(db.String)
 
-    def __init__(self, item_movimento, descrProdMalha, codFamMalha, descrFamMalha, op_referencia, 
-                item_referencia, saldo_anterior, quantidade_movimento, saldo_atual,  quantProdMalha, idFamMalha, 
-                idMalha, idProdMalha, intProdMalha, percPerdaProdMalha, pesoBrutoProdMalha, pesoLiqProdMalha, 
-                tipoProdMalha, uAltProdMalha, uIncProdMalha, unidProdMalha,  data_movimento, hora_movimento):  
+    def __init__(self, item_movimento, descricao, op_referencia, 
+                item_referencia, saldo_anterior, quantidade_movimento, saldo_atual,  data_movimento, hora_movimento):  
 
         self.item_movimento = item_movimento
-        self.descrProdMalha = descrProdMalha
-        self.codFamMalha = codFamMalha
-        self.descrFamMalha = descrFamMalha
+        self.descricao = descricao
         self.op_referencia = op_referencia
         self.item_referencia = item_referencia
         self.saldo_anterior = saldo_anterior
         self.quantidade_movimento = quantidade_movimento
         self.saldo_atual = saldo_atual
-        self.quantProdMalha = quantProdMalha        
-        self.idFamMalha = idFamMalha
-        self.idMalha = idMalha
-        self.idProdMalha = idProdMalha
-        self.intProdMalha = intProdMalha
-        self.percPerdaProdMalha = percPerdaProdMalha
-        self.pesoBrutoProdMalha = pesoBrutoProdMalha
-        self.pesoLiqProdMalha = pesoLiqProdMalha
-        self.tipoProdMalha = tipoProdMalha
-        self.uAltProdMalha = uAltProdMalha
-        self.uIncProdMalha = uIncProdMalha
-        self.unidProdMalha = unidProdMalha
         self.data_movimento = data_movimento
         self.hora_movimento = hora_movimento
 

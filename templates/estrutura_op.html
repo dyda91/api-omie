@@ -6,6 +6,64 @@
 {% block body %}
 
 
+<!-- <div id="wrapper"  class="w-100">
+
+    <table class="table table-striped">
+
+        <tr class="bg-info info_estrutura">
+           {% if estrutura_op.get('ident') == None %}
+                <h1>Item sem estrutura cadastrada</h1>
+            
+            {%else%}
+                <td>OP Nº = {{ ref[0] }}</td>
+                <td>Item = {{ ref[1] }}</td>
+                <td>Qtd. OP: = {{ ref[3] }}</td>
+            {%endif%}
+        </tr>
+
+    </table>
+
+    <div class="container_table table-responsive">
+        <table class="table table-striped">
+            <tr class="bg-secondary">
+                <td>codigo Produto</td>
+                <td>Desc. Produto</td>
+                <td>Quant. Produto</td>
+
+
+                <table  class="table table-striped w-100" id="data_table">
+                    <tr>
+                     <th>Item</th>
+                     <th>Descrição</th>
+                     <th>Quantidade</th>
+                     <th>Ação</th>
+                    </tr>
+                 
+                 
+                    
+                 
+                    <tr>
+                     <td><input type="text" id="codigo_item"></td>
+                     <td><input type="text" id="descricao_item"></td>
+                     <td><input type="text" id="quantidade_item"></td>
+                     <td><input type="button" class="add" onclick="add_row();" value="Add Row"></td>
+                    </tr>
+                 
+                   </table>
+            {%for row in estrutura_op["itens"]%}
+            <tbody>
+                <td><input type="text" id="codigo_item" value="{{ row.get('codProdMalha')}}"></td>
+                <td><input type="text" id="descricao_item" value="{{ row.get('descrProdMalha')}}"></td>
+                <td><input type="text" id="quantidade_item" value="{{ row.get('quantProdMalha') }}"></td>
+                <td><input type="button" class="add" onclick="add_row();" value="Add Row"></td>           
+            </tbody>
+            {%endfor%}
+        </table>
+
+
+    
+   </div> -->
+
 <div class=" p-2 w-100 table-responsive margin-top">
 
     <div class="input-group mb-3 d-flex justify-content-end">
@@ -31,48 +89,44 @@
     <div class="container_table table-responsive">
         <table class="table table-striped">
             <tr class="bg-secondary">
-                <td>Desc. Familia</td>
-                <td>Desc. Produto</td>
-                <td>Id. Familia</td>
-                <td>Id. Malha</td>
-                <td>Id. Produto</td>
-                <td>intProdMalha</td>
-                <td>Perc. Perda</td>
-                <td>Peso Bruto</td>
-                <td>Peso Liquido</td>
+                <td>Item</td>
+                <td>Desc. Item</td>
                 <td>Quant. Produto</td>
-                <td>Tipo Produto</td>
-                <td>uAltProdMalha</td>
-                <td>uIncProdMalha</td>
-                <td>unidProdMalha</td>
             </tr>
-            {%for row in estrutura_op["itens"]%}
+            {%for row in itens_movimentados%}
             <tbody id="myTable">
-                
-                <td>{{ row.get("descrFamMalha")}}</td>
-                <td>{{ row.get("descrProdMalha")}}</td>
-                <td>{{ row.get("idFamMalha")}}</td>
-                <td>{{ row.get("idMalha")}}</td>
-                <td>{{ row.get("idProdMalha")}}</td>
-                <td>{{ row.get("intProdMalha")}}</td>
-                <td>{{ row.get("percPerdaProdMalha")}}</td>
-                <td>{{ row.get("pesoBrutoProdMalha")}}</td>
-                <td>{{ row.get("pesoLiqProdMalha")}}</td>
-                <td><input type="float" id="qtd_value" value="{{ row.get('quantProdMalha') }}"></td>
-                <td>{{ row.get("tipoProdMalha")}}</td>
-                <td>{{ row.get("uAltProdMalha")}}</td>
-                <td>{{ row.get("uIncProdMalha")}}</td>
-                <td>{{ row.get("unidProdMalha")}}</td>
+                <td>{{ row.item_movimento}}</td>
+                <td>{{ row.descricao}}</td>
+                <td>{{ row.quantidade_movimento}}</td>
                 
             </tbody>
             {%endfor%}
         </table>
-            <form action="{{ url_for('movimento_estoque') }}" method="post">
+
+        <form action="{{ url_for('movimento_estoque') }}" method="post">
+            <input name="item">
+            <input name="quantidade">
+            <input type="hidden" name="op" value="{{ ref[0] }}">
+            <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
+            <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
+            <button type="submit" class="btn btn-success ms-2">Adionar item</button>
+        </form>
+        {%for row in estrutura_op["itens"]%}
+        <form action="{{ url_for('movimento_estoque') }}" method="post">
+            <input name="item" value="{{row.get('codProdMalha')}}">
+            <input name="quantidade" value="{{row.get('quantProdMalha')}}">
+            <input type="hidden" name="op" value="{{ ref[0] }}">
+            <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
+            <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
+            <button type="submit" class="btn btn-success ms-2">Adionar item</button>
+        </form>
+        {%endfor%}
+            <!-- <form action="{{ url_for('movimento_estoque') }}" method="post">
                 <input type="hidden" name="item" value="{{ ref[1] }}">
                 <input type="hidden" name="id" value="{{ ref[0] }}">
                 <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
                 <button type="submit" class="btn btn-success ms-2">Encerrar Op</button>
-            </form>
+            </form> -->
        
     </div>
     
