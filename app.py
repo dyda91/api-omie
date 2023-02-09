@@ -1,7 +1,7 @@
 import requests
 from flask import Flask, render_template, flash, redirect, url_for, request, session, jsonify, json
 from datetime import date, datetime
-from models.models import Ops, Movimentos_estoque
+from models.models import Ops, Movimentos_estoque, Estrutura_op
 from config import app, db, app_key, app_secret
 
 
@@ -146,6 +146,11 @@ def ordens_producao():
 def insert_op():     
     data_atual = date.today().strftime("%Y-%m-%d")
     hora_atual = datetime.now().strftime("%H:%M")
+     
+    ano_dia = date.today().strftime("%Y%d")
+    hora_minuto = datetime.now().strftime("%H%M")
+    numero_op = ano_dia + hora_minuto
+
     if request.method == 'POST':
         item = request.form.get("item")
         data = {
@@ -158,10 +163,10 @@ def insert_op():
                 ]}
         response = requests.post(url=url_produtos, json=data)
         data_resp = response.json()
-        numero_op = request.form.get("numero_op")
+        numero_op = numero_op
         situação = "Aberta"       
         descrição = data_resp.get("descricao")
-        quantidade = request.form.get("quantidade")
+        quantidade = float(request.form.get("quantidade"))
         data_abertura = data_atual
         hora_abertura = hora_atual
 
@@ -172,7 +177,29 @@ def insert_op():
 
         flash (f'OP para o item {item} Aberta com sucesso', category='soccess')
 
-        return redirect(url_for('ordens_producao'))
+    data = {
+                "call":"ConsultarEstrutura",
+                "app_key": app_key,
+                "app_secret": app_secret,
+                "param":[{
+                    "codProduto": item
+                        }
+                ]}
+    response = requests.post(url=url_estrutura, json=data)
+    estrutura_op = response.json()
+
+    for row in estrutura_op["itens"]:
+        op = request.form.get("numero_op")
+        qtd_unitaria = float(row.get('quantProdMalha'))
+        nova_estrutura = Estrutura_op(op_referencia=op, 
+                                    item_estrutura=row.get("codProdMalha"), 
+                                    descricao_item=row.get("descrProdMalha"),
+                                    quantidade_item=quantidade * qtd_unitaria)
+        db.session.add(nova_estrutura)
+        db.session.commit()
+
+
+    return redirect(url_for('ordens_producao'))
 
 @app.route('/update_op', methods=['GET', 'POST'])
 def update_op():
@@ -207,16 +234,17 @@ def delete(id):
 # ================================================================================================
 
 
-@app.route('/estrutura_op', methods = ['GET','POST'])
-def estrutura_op():
-    op = request.form.get("id")
+@app.route('/estrutura_op/<numero_op>', methods = ['GET','POST'])
+def estrutura_op(numero_op):
+    op = numero_op
     item = request.form.get("item")
     descricao = request.form.get("descricao")
     op_qtd = request.form.get("op_qtd")
     ref = [op, item, descricao, op_qtd]
-    itens_movimentados = Movimentos_estoque.query.filter_by(op_referencia = op).all()
-    if request.method == 'POST':  
-        data = {
+    itens_movimentados = Movimentos_estoque.query.filter_by(op_referencia = op).all()   
+    
+     
+    data = {
                 "call":"ConsultarEstrutura",
                 "app_key": app_key,
                 "app_secret": app_secret,
@@ -224,31 +252,13 @@ def estrutura_op():
                     "codProduto": item
                         }
                 ]}
-        response = requests.post(url=url_estrutura, json=data)
-        estrutura_op = response.json()
+    response = requests.post(url=url_estrutura, json=data)
+    estrutura_op = response.json()
 
-    return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, estrutura_op=estrutura_op, ref=ref)
+    item_recomendado_estrutura = Estrutura_op.query.filter_by(op_referencia = op).all()
 
-    # op = request.form.get("id")
-    # item = request.form.get("item")   
-    # descricao = request.form.get("descricao")
-    # op_qtd = request.form.get("op_qtd")
-    # ref = [op, item, descricao, op_qtd]
-    # if request.method == 'POST':  
-    #     data = {
-    #             "call":"ConsultarEstrutura",
-    #             "app_key": app_key,
-    #             "app_secret": app_secret,
-    #             "param":[{
-    #                 "codProduto": item
-    #                     }
-    #             ]}
-    #     response = requests.post(url=url_estrutura, json=data)
-    #     estrutura_op = response.json()
 
-        
-        # return render_template("estrutura_op.html", estrutura_op=estrutura_op, ref = ref)
-
+    return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, estrutura_op=estrutura_op, ref=ref, item_recomendado_estrutura=item_recomendado_estrutura)
 
 
 @app.route('/movimento_estoque', methods = ['GET','POST'])
@@ -259,7 +269,7 @@ def movimento_estoque():
     if request.method == 'POST':
         op_referencia = request.form.get("op")
         
-
+        id = request.form.get("id")
         item_movimento = request.form.get("item")
         quantidade_movimento = float(request.form.get("quantidade"))
         item_referencia = request.form.get("item_referencia")
@@ -287,12 +297,12 @@ def movimento_estoque():
                 }]
                 }
 
-        response = requests.post(url=url_estrutura, json=data)
+        response = requests.post(url=url_estrutura, json=saldo)
         saldo_resp = response.json()
         saldo_anterior = float(1000000)
         # saldo = saldo_resp["listaEstoque"][0]
         # # saldo_anterior = float(saldo.get("nSaldo"))
-
+        
         novo_movimento = Movimentos_estoque(item_movimento=item_movimento, 
                                             descricao=descricao, 
                                             op_referencia=op_referencia, 
@@ -302,14 +312,17 @@ def movimento_estoque():
                                             saldo_atual = saldo_anterior - quantidade_movimento,
                                             data_movimento = data_atual,
                                             hora_movimento = hora_atual)
+        if id != None:
+            deleta_item = Estrutura_op.query.get(id)
+            db.session.delete(deleta_item)
 
-        db.session.add(novo_movimento)
+        db.session.add(novo_movimento)  
         db.session.commit()
-
        
 
 
-    return redirect(url_for('ordens_producao'))
+    return redirect(request.referrer)
+
 
     # item = request.form.get("item")
     # op = request.form.get("id")

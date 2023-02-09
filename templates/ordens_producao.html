@@ -47,7 +47,7 @@
                 <table class="table table-hover table-info">
 
                     <tr>                        
-                        <th> OP</th>
+                        <th>Nº OP</th>
                         <th>Situação</th>
                         <th>Item</th>
                         <th>Descrição</th>
@@ -61,7 +61,7 @@
                     {% for row in itens.items %}
                     
                     <tr>                      
-                        <td>{{row.id}}</td>
+                        <td>{{row.numero_op}}</td>
                         <td>{{row.situação}}</td>
                         <td>{{row.item}}</td>
                         <td>{{row.descrição}}</td> 
@@ -83,9 +83,9 @@
                                     </a>
                                 </div>
                                 <div>           
-                                    <form action="{{ url_for('estrutura_op') }}" method="post" type="hidden" >
+                                    <form action="estrutura_op/{{row.numero_op}}" method="post" type="hidden" >
                                                 <input type="hidden" name="item" value="{{row.item}}">
-                                                <input type="hidden" name="id" value="{{row.id}}">
+                                                <input type="hidden" name="numero_op" value="{{row.numero_op}}">
                                                 <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
                                                 <input type="hidden" name="descricao" value="{{row.descrição}}">     
                                                 <button type="submit" for="myForm" class="btn btn-info btn-xs"><img

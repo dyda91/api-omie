@@ -76,7 +76,7 @@
 
         <tr class="bg-info info_estrutura">
            {% if estrutura_op.get('ident') == None %}
-                <h1>Item sem estrutura cadastrada</h1>
+                <h3>Pode não haver cadastro para algum item consumido</h3>
             
             {%else%}
                 <td>OP Nº = {{ ref[0] }}</td>
@@ -111,14 +111,15 @@
             <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
             <button type="submit" class="btn btn-success ms-2">Adionar item</button>
         </form>
-        {%for row in estrutura_op["itens"]%}
+        {%for row in item_recomendado_estrutura%}
         <form action="{{ url_for('movimento_estoque') }}" method="post">
-            <input name="item" value="{{row.get('codProdMalha')}}">
-            <input name="quantidade" value="{{row.get('quantProdMalha')}}">
+            <input name="item" value="{{row.item_estrutura}}">
+            <input name="quantidade" value="{{row.quantidade_item}}">
             <input type="hidden" name="op" value="{{ ref[0] }}">
+            <input type="hidden" name="id" value="{{row.id}}">
             <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
             <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
-            <button type="submit" class="btn btn-success ms-2">Adionar item</button>
+            <button type="submit" class="btn btn-success ms-2">Adicionar item</button>
         </form>
         {%endfor%}
             <!-- <form action="{{ url_for('movimento_estoque') }}" method="post">

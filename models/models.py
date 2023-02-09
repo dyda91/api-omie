@@ -9,15 +9,13 @@ from config import db
 class Ops(db.Model):
     __tablename__='ops'
     id = db.Column(db.Integer, primary_key=True)   
-    numero_op = db.Column(db.Integer)
+    numero_op = db.Column(db.String)
     situação = db.Column(db.String)
     item = db.Column(db.String)
     descrição = db.Column(db.String)
     quantidade = db.Column(db.Integer)
     data_abertura = db.Column(db.String)
     hora_abertura = db.Column(db.String)
-
-    movimento_est = db.relationship('Movimentos_estoque', backref='Movimentos_estoque', lazy=True)
 
 
     def __init__(self, numero_op, situação, item, descrição, quantidade, data_abertura, hora_abertura):
@@ -30,12 +28,13 @@ class Ops(db.Model):
         self.hora_abertura = hora_abertura
 
        
-        db.create_all()
-        db.session.commit()
+        # db.create_all()
+        # db.session.commit()
 
 
     def __repr__(self):
-        return 'Ops: {}' .format(self.item)
+        return 'Ops: {} - {} - {} - {} - {} - {} - {} - {}' .format(self.id, self.numero_op, self.situação, self.item, self.descrição, 
+                                                                    self.quantidade, self.data_abertura, self.hora_abertura)
 
 
 class Movimentos_estoque(db.Model):
@@ -43,7 +42,7 @@ class Movimentos_estoque(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     item_movimento = db.Column(db.String)
     descricao = db.Column(db.String)
-    op_referencia = db.Column(db.Integer, db.ForeignKey('ops.numero_op'))
+    op_referencia = db.Column(db.Integer)
     item_referencia = db.Column(db.String)
     saldo_anterior = db.Column(db.Integer)
     quantidade_movimento = db.Column(db.Integer)
@@ -69,4 +68,32 @@ class Movimentos_estoque(db.Model):
 
 
     def __repr__(self):
-        return 'Movimentos_estoque: {}' .format(self.op_referencia)
+        return 'Movimentos_estoque: {} - {} - {} - {} - {} - {} - {} - {} - {} - {}' .format(self.id, self.item_movimento, self.descricao, self.op_referencia, 
+                self.item_referencia, self.saldo_anterior, self.quantidade_movimento,  self.saldo_atual, self.data_movimento, self.hora_movimento)
+
+
+class Estrutura_op(db.Model):
+    __tablename__='estrutura_op'
+    id = db.Column(db.Integer, primary_key=True)
+    op_referencia = db.Column(db.Integer, db.ForeignKey('ops.id'))
+    item_estrutura = db.Column(db.String)
+    descricao_item = db.Column(db.String)
+    quantidade_item = db.Column(db.Float)
+
+
+    estrutura = db.relationship('Ops', foreign_keys=op_referencia)
+
+    def __init__(self, op_referencia, item_estrutura, descricao_item, 
+                quantidade_item):  
+
+        self.op_referencia = op_referencia
+        self.item_estrutura = item_estrutura
+        self.descricao_item = descricao_item
+        self.quantidade_item = quantidade_item
+       
+        db.create_all()
+        db.session.commit()
+
+
+    def __repr__(self):
+        return 'Movimentos_estoque: {} - {} - {} - {}' .format(self.op_referencia, self.item_estrutura, self.descricao_item,self.quantidade_item)
