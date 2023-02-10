@@ -189,7 +189,7 @@ def insert_op():
     estrutura_op = response.json()
 
     for row in estrutura_op["itens"]:
-        op = request.form.get("numero_op")
+        op = numero_op
         qtd_unitaria = float(row.get('quantProdMalha'))
         nova_estrutura = Estrutura_op(op_referencia=op, 
                                     item_estrutura=row.get("codProdMalha"), 
@@ -257,7 +257,6 @@ def estrutura_op(numero_op):
 
     item_recomendado_estrutura = Estrutura_op.query.filter_by(op_referencia = op).all()
 
-
     return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, estrutura_op=estrutura_op, ref=ref, item_recomendado_estrutura=item_recomendado_estrutura)
 
 
@@ -318,85 +317,23 @@ def movimento_estoque():
 
         db.session.add(novo_movimento)  
         db.session.commit()
-       
 
 
     return redirect(request.referrer)
 
 
-    # item = request.form.get("item")
-    # op = request.form.get("id")
-    # op_qtd = float(request.form.get("op_qtd"))
-      
-    # data_atual = date.today().strftime("%d/%m/%Y")
-    # hora_atual = datetime.now().strftime("%H:%M")
+@app.route('/deleta_movimento_item', methods=['GET', 'POST'])
+def deleta_movimento_item():
+    id = request.form.get("id")
+    movimento = Movimentos_estoque.query.get(id)
 
-    # data = {
-    #             "call":"ConsultarEstrutura",
-    #             "app_key": app_key,
-    #             "app_secret": app_secret,
-    #             "param":[{
-    #                 "codProduto": item
-    #                     }
-    #             ]}
-    # response = requests.post(url=url_estrutura, json=data)
-    # estrutura = response.json()
+    db.session.delete(movimento)
+    db.session.commit()   
 
 
+    return redirect(request.referrer)
 
-    # # for row in estrutura["itens"]:    
 
-    # #         real_unitario = float(row.get('quantProdMalha'))
-    # #         quantidade_movimento = op_qtd * real_unitario
-    # #         item_movimento = row.get("codProdMalha")
-
-    # #         saldo = {"call":"ObterEstoqueProduto",
-    # #              "app_key":app_key,
-    # #              "app_secret":app_secret,
-    # #              "param":[{
-    # #                     "cCodigo":item_movimento,
-    # #                     "dDia": data_atual
-    # #         }]
-    # #         }
-    # #         response = requests.post(url=url_consulta_estoque, json=saldo)
-    # #         saldo = response.json()
-    # #         saldo = saldo["listaEstoque"][0]
-    # #         saldo_anterior = float(saldo.get("nSaldo"))
-
-    # #         movimento = Movimentos_estoque( 
-    # #         item_movimento = item_movimento,
-    # #         descrProdMalha = row.get("descrProdMalha"),
-    # #         codFamMalha = row.get("codFamMalha"),
-    # #         descrFamMalha = row.get("descrFamMalha"),
-    # #         op_referencia = op,
-    # #         item_referencia = item,
-    # #         saldo_anterior = saldo_anterior,
-    # #         quantidade_movimento =  quantidade_movimento,
-    # #         saldo_atual = saldo_anterior - quantidade_movimento,
-    # #         quantProdMalha = row.get('quantProdMalha'),
-    # #         idFamMalha = row.get("idFamMalha"),
-    # #         idMalha = row.get("idMalha"),
-    # #         idProdMalha = row.get("idProdMalha"),
-    # #         intProdMalha = row.get("intProdMalha"),
-    # #         percPerdaProdMalha = row.get("percPerdaProdMalha"),
-    # #         pesoBrutoProdMalha = row.get("pesoBrutoProdMalha"),
-    # #         pesoLiqProdMalha = row.get("pesoLiqProdMalha"),            
-    # #         tipoProdMalha = row.get("tipoProdMalha"),
-    # #         uAltProdMalha = row.get("uAltProdMalha"),
-    # #         uIncProdMalha = row.get("uIncProdMalha"),
-    # #         unidProdMalha = row.get("unidProdMalha"),
-    # #         data_movimento = data_atual,
-    # #         hora_movimento = hora_atual)
-
-    # #         db.session.add(movimento)
-            
-
-    # edita_situacao = Ops.query.get(op)
-    # edita_situacao.situação = "Encerrada"
-
-    # db.session.commit()
-
-    # return redirect(url_for('ordens_producao'), itens_movimentados = itens_movimentados)
 
 
 if __name__ == "__main__":

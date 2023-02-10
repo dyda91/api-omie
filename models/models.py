@@ -75,13 +75,10 @@ class Movimentos_estoque(db.Model):
 class Estrutura_op(db.Model):
     __tablename__='estrutura_op'
     id = db.Column(db.Integer, primary_key=True)
-    op_referencia = db.Column(db.Integer, db.ForeignKey('ops.id'))
+    op_referencia = db.Column(db.String)
     item_estrutura = db.Column(db.String)
     descricao_item = db.Column(db.String)
     quantidade_item = db.Column(db.Float)
-
-
-    estrutura = db.relationship('Ops', foreign_keys=op_referencia)
 
     def __init__(self, op_referencia, item_estrutura, descricao_item, 
                 quantidade_item):  

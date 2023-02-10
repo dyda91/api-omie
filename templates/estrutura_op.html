@@ -66,7 +66,7 @@
 
 <div class=" p-2 w-100 table-responsive margin-top">
 
-    <div class="input-group mb-3 d-flex justify-content-end">
+    <div class="input-group mb-3 d-flex justify-content-start">
         <div class="input-group-append">
             <a href="{{url_for('ordens_producao')}}" type="button" class="btn btn-success ms-2">Voltar</a>
         </div>
@@ -92,45 +92,72 @@
                 <td>Item</td>
                 <td>Desc. Item</td>
                 <td>Quant. Produto</td>
+                <td>Ações</td>
             </tr>
             {%for row in itens_movimentados%}
             <tbody id="myTable">
                 <td>{{ row.item_movimento}}</td>
                 <td>{{ row.descricao}}</td>
                 <td>{{ row.quantidade_movimento}}</td>
+                <td>
+                    <div  class="icons">
+                        <div>
+                            <a href="update" class="editItem btn btn-warning btn-xs"><img
+                                    src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
+                            </a>
+                        </div>
+                        <form action="{{url_for('deleta_movimento_item')}}" method="post" type="hidden" >
+                            <input type="hidden" name="id" value="{{row.id}}">     
+                            <button type="submit" class="btn btn-danger btn-xs"><img
+                                src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt="">
+                            </button>                           
+                        </form>
+                    </div>
+                </td>
                 
             </tbody>
             {%endfor%}
         </table>
 
+        <div class="border-top my-2"></div>
+        <h6>Adcionar novo item nessa OP</h6>
         <form action="{{ url_for('movimento_estoque') }}" method="post">
             <input name="item">
             <input name="quantidade">
             <input type="hidden" name="op" value="{{ ref[0] }}">
             <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
             <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
-            <button type="submit" class="btn btn-success ms-2">Adionar item</button>
+            <button type="submit" class="btn btn-success ms-2"><img
+                src="{{url_for('static', filename='images/plus-lg.svg')}}" alt=""></button>
         </form>
+
+        
+        <div class="border-top mt-4"></div>
+        <h6>Itens sugeridos pela estrutura</h6>
         {%for row in item_recomendado_estrutura%}
-        <form action="{{ url_for('movimento_estoque') }}" method="post">
-            <input name="item" value="{{row.item_estrutura}}">
-            <input name="quantidade" value="{{row.quantidade_item}}">
-            <input type="hidden" name="op" value="{{ ref[0] }}">
-            <input type="hidden" name="id" value="{{row.id}}">
-            <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
-            <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
-            <button type="submit" class="btn btn-success ms-2">Adicionar item</button>
-        </form>
+        
+            
+                <form action="{{ url_for('movimento_estoque') }}" method="post">
+                    <input name="item" value="{{row.item_estrutura}}">
+                    <input name="quantidade" value="{{row.quantidade_item}}">
+                    <input type="hidden" name="op" value="{{ ref[0] }}">
+                    <input type="hidden" name="id" value="{{row.id}}">
+                    <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
+                    <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
+                    <button type="submit" class="btn btn-success ms-2"><img
+                        src="{{url_for('static', filename='images/plus-lg.svg')}}" alt=""></button>
+                </form>
+                <div class="border-top my-2"></div>
+        
         {%endfor%}
-            <!-- <form action="{{ url_for('movimento_estoque') }}" method="post">
-                <input type="hidden" name="item" value="{{ ref[1] }}">
-                <input type="hidden" name="id" value="{{ ref[0] }}">
-                <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
-                <button type="submit" class="btn btn-success ms-2">Encerrar Op</button>
-            </form> -->
        
     </div>
     
+    <div class="input-group mb-3 d-flex justify-content-end">
+        <div class="input-group-append">
+            <a href="{{url_for('ordens_producao')}}" type="button" class="btn btn-success ms-2">Encerrar OP</a>
+        </div>
+    </div>
 
 </div>
 
