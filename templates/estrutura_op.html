@@ -5,65 +5,6 @@
 {% block title %} estrutura da Op {% endblock %}
 {% block body %}
 
-
-<!-- <div id="wrapper"  class="w-100">
-
-    <table class="table table-striped">
-
-        <tr class="bg-info info_estrutura">
-           {% if estrutura_op.get('ident') == None %}
-                <h1>Item sem estrutura cadastrada</h1>
-            
-            {%else%}
-                <td>OP Nº = {{ ref[0] }}</td>
-                <td>Item = {{ ref[1] }}</td>
-                <td>Qtd. OP: = {{ ref[3] }}</td>
-            {%endif%}
-        </tr>
-
-    </table>
-
-    <div class="container_table table-responsive">
-        <table class="table table-striped">
-            <tr class="bg-secondary">
-                <td>codigo Produto</td>
-                <td>Desc. Produto</td>
-                <td>Quant. Produto</td>
-
-
-                <table  class="table table-striped w-100" id="data_table">
-                    <tr>
-                     <th>Item</th>
-                     <th>Descrição</th>
-                     <th>Quantidade</th>
-                     <th>Ação</th>
-                    </tr>
-                 
-                 
-                    
-                 
-                    <tr>
-                     <td><input type="text" id="codigo_item"></td>
-                     <td><input type="text" id="descricao_item"></td>
-                     <td><input type="text" id="quantidade_item"></td>
-                     <td><input type="button" class="add" onclick="add_row();" value="Add Row"></td>
-                    </tr>
-                 
-                   </table>
-            {%for row in estrutura_op["itens"]%}
-            <tbody>
-                <td><input type="text" id="codigo_item" value="{{ row.get('codProdMalha')}}"></td>
-                <td><input type="text" id="descricao_item" value="{{ row.get('descrProdMalha')}}"></td>
-                <td><input type="text" id="quantidade_item" value="{{ row.get('quantProdMalha') }}"></td>
-                <td><input type="button" class="add" onclick="add_row();" value="Add Row"></td>           
-            </tbody>
-            {%endfor%}
-        </table>
-
-
-    
-   </div> -->
-
 <div class=" p-2 w-100 table-responsive margin-top">
 
     <div class="input-group mb-3 d-flex justify-content-start">
@@ -72,22 +13,20 @@
         </div>
     </div>
 
-    <table class="table table-striped">
+    <table class="table">
 
         <tr class="bg-info info_estrutura">
-           {% if estrutura_op.get('ident') == None %}
-                <h3>Pode não haver cadastro para algum item consumido</h3>
-            
-            {%else%}
-                <td>OP Nº = {{ ref[0] }}</td>
-                <td>Item = {{ ref[1] }}</td>
-                <td>Qtd. OP: = {{ ref[3] }}</td>
-            {%endif%}
+            {%for row in op_dados%}
+            <td>OP Nº = {{ row.numero_op }}</td>
+            <td>Item = {{ row.descrição }}</td>
+            <td>Qtd. OP: = {{ row.quantidade }}</td>
+            {%endfor%}
         </tr>
 
     </table>
     <div class="container_table table-responsive">
-        <table class="table table-striped">
+       
+        <table class="table bcgrownd">
             <tr class="bg-secondary">
                 <td>Item</td>
                 <td>Desc. Item</td>
@@ -95,14 +34,23 @@
                 <td>Ações</td>
             </tr>
             {%for row in itens_movimentados%}
-            <tbody id="myTable">
+            <tr class="bg-muted">
+                
                 <td>{{ row.item_movimento}}</td>
-                <td>{{ row.descricao}}</td>
-                <td>{{ row.quantidade_movimento}}</td>
+                <td>{{ row.descricao}}</td>         
+                <td id="rowInput{{ row.id}}" class="hide" ><input type="number" value="{{ row.quantidade_movimento}}"></td>                       
+                <td id="row{{row.id}}" class="editItem">{{ row.quantidade_movimento}}</td>
+                {%for i in op_dados%}        
+                {%if i.situação == "Aberta"%}
                 <td>
-                    <div  class="icons">
-                        <div>
-                            <a href="update" class="editItem btn btn-warning btn-xs"><img
+                    <div  class="icons" onclick="editarQuantidade(this)">
+                        <div class="row{{row.id}}">
+                            <a class=" btn btn-warning btn-xs">
+                                <img src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
+                            </a>
+                        </div>
+                        <div class="hide btnSave" id="btnSave">
+                            <a class="editItem btn btn-info btn-xs" onclick="salvarQuantidade()"><img
                                     src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
                             </a>
                         </div>
@@ -114,11 +62,13 @@
                         </form>
                     </div>
                 </td>
-                
-            </tbody>
+                {%endif%}
+                {%endfor%}
+            </tr>
             {%endfor%}
         </table>
-
+        {%for i in op_dados%}
+        {%if i.situação == "Aberta"%}
         <div class="border-top my-2"></div>
         <h6>Adcionar novo item nessa OP</h6>
         <form action="{{ url_for('movimento_estoque') }}" method="post">
@@ -127,35 +77,61 @@
             <input type="hidden" name="op" value="{{ ref[0] }}">
             <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
             <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
-            <button type="submit" class="btn btn-success ms-2"><img
+            <button type="submit" class="btn btn-success ms-2 desativarBotao" onclick="this.disabled=true;this.value='Submitting...'; this.form.submit();"><img
                 src="{{url_for('static', filename='images/plus-lg.svg')}}" alt=""></button>
         </form>
 
         
         <div class="border-top mt-4"></div>
         <h6>Itens sugeridos pela estrutura</h6>
-        {%for row in item_recomendado_estrutura%}
+        <table class="table table-secondary w-50">
+            {%for row in item_recomendado_estrutura%}
         
             
                 <form action="{{ url_for('movimento_estoque') }}" method="post">
-                    <input name="item" value="{{row.item_estrutura}}">
-                    <input name="quantidade" value="{{row.quantidade_item}}">
+                    <tr>                        
+                    <td>{{row.item_estrutura}}</td>
+                    <td>{{row.descricao_item}}</td>
+                    <input type="hidden" name="item" value="{{row.item_estrutura}}" readonly>
+                    <input type="hidden" name="descricao" value="{{row.descricao_item}}" readonly>
+                    <td><input name="quantidade" value="{{row.quantidade_item}}"></td>
                     <input type="hidden" name="op" value="{{ ref[0] }}">
                     <input type="hidden" name="id" value="{{row.id}}">
                     <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
                     <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
-                    <button type="submit" class="btn btn-success ms-2"><img
+                    <td>
+                        <button type="submit" class="btn btn-success ms-2 desativarBotao" onclick="this.disabled=true;this.value='Submitting...'; this.form.submit();"><img
                         src="{{url_for('static', filename='images/plus-lg.svg')}}" alt=""></button>
+                    </td>
+                    </tr>
                 </form>
-                <div class="border-top my-2"></div>
+            {%endfor%}
+        </table>
         
+            
+        {%endif%}
         {%endfor%}
-       
     </div>
     
     <div class="input-group mb-3 d-flex justify-content-end">
         <div class="input-group-append">
-            <a href="{{url_for('ordens_producao')}}" type="button" class="btn btn-success ms-2">Encerrar OP</a>
+            {%for row in op_dados%}
+            {% if row.situação == "Encerrada" %}
+            <form action="{{url_for('encerra_op')}}" method="post">
+                <input type="hidden" name="id" value="{{row.id}}">
+                <input type="hidden" name="situacao" value="Aberta">
+                <button type="submit" class="btn btn-secondary ms-2 encerraOP">Reabrir OP</button>
+            </form>
+
+            {% else %}
+
+            <form action="{{url_for('encerra_op')}}" method="post">
+                <input type="hidden" name="id" value="{{row.id}}">
+                <input type="hidden" name="situacao" value="Encerrada">
+                <button type="submit" class="btn btn-success ms-2 encerraOP">Encerrar OP</button>
+            </form>
+            {%endif%}
+            {%endfor%}
         </div>
     </div>
 

@@ -46,7 +46,7 @@
 
                 <table class="table table-hover table-info">
 
-                    <tr>                        
+                    <tr class="table-primary">                        
                         <th>Nº OP</th>
                         <th>Situação</th>
                         <th>Item</th>
@@ -60,7 +60,7 @@
 
                     {% for row in itens.items %}
                     
-                    <tr>                      
+                    <tr class='{{"table-dark" if row.situação == "Encerrada" else ""}}'>                      
                         <td>{{row.numero_op}}</td>
                         <td>{{row.situação}}</td>
                         <td>{{row.item}}</td>
@@ -68,10 +68,22 @@
                         <td>{{row.quantidade}}</td> 
                         <td>{{row.data_abertura}}</td> 
                         <td>{{row.hora_abertura}}</td> 
+                        {% if row.situação == "Encerrada" %}
+                        <td>
+                            <form action="estrutura_op/{{row.numero_op}}" method="post" type="hidden" >
+                                <input type="hidden" name="item" value="{{row.item}}">
+                                <input type="hidden" name="numero_op" value="{{row.numero_op}}">
+                                <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
+                                <input type="hidden" name="descricao" value="{{row.descrição}}">     
+                                <button type="submit" for="myForm" class="btn btn-primary btn-xs"><img
+                                src="{{url_for('static', filename='images/eye.svg')}}" alt=""></button>                           
+                            </form>
+                        </td>
+                        {% else %}
                         <td>
                             <div  class="icons">
                                 <div>
-                                    <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
+                                    <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs " data-bs-toggle="modal"
                                         data-bs-target="#edit_op_modal{{row.id}}"><img
                                         src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
                                     </a>
@@ -94,6 +106,7 @@
                                 </div>
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
 
 

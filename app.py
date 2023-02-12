@@ -242,7 +242,7 @@ def estrutura_op(numero_op):
     op_qtd = request.form.get("op_qtd")
     ref = [op, item, descricao, op_qtd]
     itens_movimentados = Movimentos_estoque.query.filter_by(op_referencia = op).all()   
-    
+    op_dados = Ops.query.filter_by(numero_op = op).all()
      
     data = {
                 "call":"ConsultarEstrutura",
@@ -257,7 +257,7 @@ def estrutura_op(numero_op):
 
     item_recomendado_estrutura = Estrutura_op.query.filter_by(op_referencia = op).all()
 
-    return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, estrutura_op=estrutura_op, ref=ref, item_recomendado_estrutura=item_recomendado_estrutura)
+    return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, estrutura_op=estrutura_op, ref=ref, item_recomendado_estrutura=item_recomendado_estrutura, op_dados=op_dados)
 
 
 @app.route('/movimento_estoque', methods = ['GET','POST'])
@@ -318,8 +318,22 @@ def movimento_estoque():
         db.session.add(novo_movimento)  
         db.session.commit()
 
-
     return redirect(request.referrer)
+
+
+@app.route('/encerra_op', methods=['GET', 'POST'])
+def encerra_op():
+    if request.method == 'POST':
+        id = request.form.get('id')
+        situacao = request.form.get('situacao')
+        encerra = Ops.query.get(id)  
+        encerra.situação = situacao
+        db.session.commit()
+        if situacao == "Aberta":
+            flash (f'Op Reaberta com sucesso', category='soccess')
+        else:
+            flash (f'Op Encerrada com sucesso', category='soccess')
+    return redirect(url_for('ordens_producao'))
 
 
 @app.route('/deleta_movimento_item', methods=['GET', 'POST'])
@@ -332,8 +346,6 @@ def deleta_movimento_item():
 
 
     return redirect(request.referrer)
-
-
 
 
 if __name__ == "__main__":
