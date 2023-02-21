@@ -1,14 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_migrate import Migrate
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
 import os
 from dotenv import load_dotenv
 
 from flask_cors import CORS
-
-# from flask_login import LoginManager
-# from flask_bcrypt import Bcrypt
-
 
 load_dotenv()
 
@@ -18,9 +16,9 @@ CORS(app)
 
 app_key = os.getenv('APP_KEY')
 app_secret = os.getenv('APP_SECRET') 
-# bcrypt = Bcrypt(app)
+bcrypt = Bcrypt(app)
 
-# login_manager = LoginManager(app)
+login_manager = LoginManager(app)
 
 db.init_app(app)
 conexao = 'sqlite:///database.db'

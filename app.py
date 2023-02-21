@@ -1,8 +1,10 @@
 import requests
 from flask import Flask, render_template, flash, redirect, url_for, request, session, jsonify, json
 from datetime import date, datetime
-from models.models import Ops, Movimentos_estoque, Estrutura_op
-from config import app, db, app_key, app_secret
+from models.models import Ops, Movimentos_estoque, Estrutura_op, User
+from models.forms import LoginForm, RegisterForm
+from flask_login import login_user, logout_user, current_user
+from config import app, db, app_key, app_secret, bcrypt, login_manager
 
 
 
@@ -11,14 +13,81 @@ url_estrutura = "https://app.omie.com.br/api/v1/geral/malha/"
 url_consulta_estoque = "https://app.omie.com.br/api/v1/estoque/resumo/"
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
-@app.route('/', methods = ['GET','POST'])
+
+#============== REGISTER ============#
+@app.route('/register', methods=["POST", "GET"])
+def register():
+    form = RegisterForm() 
+    if current_user.is_authenticated:
+         return redirect( url_for('logged'))
+    if form.validate_on_submit(): 
+
+        encrypted_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+
+        new_user = User(email=form.email.data, password=encrypted_password, name=form.name.data)  
+
+        db.session.add(new_user)
+        db.session.commit() 
+
+        flash(f'Conta criada com socesso para o usuário {form.email.data}', category='success')
+
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+#=============== LOGIN ==============#
+@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect( url_for('logged'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        logged_user = form.email.data
+        session["logged_user"] = logged_user
+
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            return redirect(url_for("logged"))
+        else:
+            flash(f'Erro ao logar no usuário {form.email.data}', category='danger')
+            
+    return render_template('login_page.html', form=form)  
+
+#=============Sessão====================#
+@app.route("/logged")
+def logged():
+    if "logged_user" in session:
+        logged_user = session["logged_user"]
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for("login"))    
+
+#============= Logout ==================#
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("login"))  
+
+
+
+
+#===================Quando usuario estiver logado ==================#
+@app.route('/index', methods = ['GET','POST'])
 def index():
-        return render_template('index.html')
+    if not current_user.is_authenticated:
+         return redirect( url_for('login'))
+    return render_template('index.html')
 
 
 @app.route('/busca', methods = ['GET','POST'])
 def busca():
+    if not current_user.is_authenticated:
+         return redirect( url_for('login'))
     if request.method == 'POST':
         item = request.form.get("search")
         data = {
@@ -41,6 +110,8 @@ def busca():
 @app.route('/estrutura', methods = ['GET','POST'])
 def estrutura():
     item = request.form['item']
+    if not current_user.is_authenticated:
+         return redirect( url_for('login'))
     
     if request.method == 'POST':  
         data = {
@@ -60,6 +131,8 @@ def estrutura():
 
 @app.route('/itens', methods = ['GET','POST'])
 def itens():
+    if not current_user.is_authenticated:
+         return redirect( url_for('login'))
     pagina = 78
     data = {
         "call":"ListarProdutos",
@@ -80,6 +153,8 @@ def itens():
 
 @app.route('/update', methods=['GET', 'POST'])
 def update():
+        if not current_user.is_authenticated:
+            return redirect( url_for('login'))
         data = {
                 "call":"AlterarProduto",
                 "app_key":app_key,
@@ -96,10 +171,14 @@ def update():
 
 @app.route('/consulta_estoque', methods = ['GET','POST'])
 def consulta_estoque(): 
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     return  render_template('consulta_estoque.html')
 
 @app.route('/estoque', methods = ['GET','POST'])
 def estoque():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     data_atual = date.today().strftime("%d/%m/%Y")
     if request.method == 'POST':
         item = request.form.get("estoque")
@@ -120,24 +199,28 @@ def estoque():
 
 @app.route('/lista_movimento', methods = ['GET','POST'])
 def lista_movimento():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     page = request.args.get('page', 1, type=int)
     dados = Movimentos_estoque.query.paginate(page=page,per_page=20)
     return  render_template('lista_movimento.html',  movimentos = dados)
 
 @app.route('/lista_movimento_filtro', methods = ['GET','POST'])
 def lista_movimento_filtro():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     data_movimento = request.form.get("data_movimento")
     filtro = Movimentos_estoque.query.filter_by(data_movimento = data_movimento).all()
     
     return  render_template('lista_movimento_filtro.html', filtro = filtro)
 
-# =======================================================================================
+# ================================== OPS ===============================================#
 
 
 @app.route('/ordens_producao', methods = ['GET','POST'])
 def ordens_producao():
-    # if not current_user.is_authenticated:
-    # #      return redirect( url_for('login'))
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     page = request.args.get('page', 1, type=int)
     dados = Ops.query.paginate(page=page,per_page=10) 
     return render_template('ordens_producao.html', itens = dados)
@@ -203,6 +286,8 @@ def insert_op():
 
 @app.route('/update_op', methods=['GET', 'POST'])
 def update_op():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     
     if request.method == 'POST':
         edit_item = Ops.query.get(request.form.get('id'))  
@@ -220,6 +305,8 @@ def update_op():
 
 @app.route('/delete_op/<id>', methods=['GET', 'POST'])
 def delete(id):
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     item = Ops.query.get(id)
 
     db.session.delete(item)
@@ -236,6 +323,8 @@ def delete(id):
 
 @app.route('/estrutura_op/<numero_op>', methods = ['GET','POST'])
 def estrutura_op(numero_op):
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     op = numero_op
     item = request.form.get("item")
     descricao = request.form.get("descricao")
@@ -262,6 +351,8 @@ def estrutura_op(numero_op):
 
 @app.route('/movimento_estoque', methods = ['GET','POST'])
 def movimento_estoque():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
 
     data_atual = date.today().strftime("%d/%m/%Y")
     hora_atual = datetime.now().strftime("%H:%M")
@@ -323,6 +414,8 @@ def movimento_estoque():
 
 @app.route('/encerra_op', methods=['GET', 'POST'])
 def encerra_op():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     if request.method == 'POST':
         id = request.form.get('id')
         situacao = request.form.get('situacao')
@@ -338,6 +431,8 @@ def encerra_op():
 
 @app.route('/deleta_movimento_item', methods=['GET', 'POST'])
 def deleta_movimento_item():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
     id = request.form.get("id")
     movimento = Movimentos_estoque.query.get(id)
 

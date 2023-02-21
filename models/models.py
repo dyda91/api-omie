@@ -1,7 +1,7 @@
 from enum import unique
 from re import T
 from config import db
-# from flask_login import UserMixin
+from flask_login import UserMixin
 
 
 
@@ -63,8 +63,8 @@ class Movimentos_estoque(db.Model):
         self.data_movimento = data_movimento
         self.hora_movimento = hora_movimento
 
-        db.create_all()
-        db.session.commit()
+        # db.create_all()
+        # db.session.commit()
 
 
     def __repr__(self):
@@ -94,3 +94,24 @@ class Estrutura_op(db.Model):
 
     def __repr__(self):
         return 'Movimentos_estoque: {} - {} - {} - {}' .format(self.op_referencia, self.item_estrutura, self.descricao_item,self.quantidade_item)
+
+
+
+class User(db.Model, UserMixin):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(30), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String, nullable=False)
+
+    def __init__(self, email, password, name):
+        self.email = email
+        self.password = password
+        self.name = name
+
+        db.create_all()
+        db.session.commit()
+
+    def __repr__(self):
+        return "<User %r>" % self.email
