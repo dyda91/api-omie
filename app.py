@@ -133,14 +133,14 @@ def estrutura():
 def itens():
     if not current_user.is_authenticated:
          return redirect( url_for('login'))
-    pagina = 78
+    pagina = 1
     data = {
         "call":"ListarProdutos",
         "app_key": app_key,
         "app_secret":app_secret,
         "param":[{
             "pagina": pagina,
-            "registros_por_pagina": 50,
+            "registros_por_pagina": 20,
             "apenas_importado_api": "N",
             "filtrar_apenas_omiepdv": "N"	
             }
