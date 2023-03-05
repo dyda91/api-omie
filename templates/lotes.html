@@ -84,7 +84,7 @@
         <form action="{{url_for('adicionar_lote')}}" method="post">
             <input type="hidden" name="op_referencia" value="{{i.numero_op}}">
             <input type="hidden" name="item" value="{{i.item}}">
-            <input type="number" name="quantidade">
+            <input type="number" name="quantidade" placeholder="Quantidade do lote">
             <button type="submit" class="btn btn-success ms-2 encerraOP">Apontar lote</button>
         </form>
 
