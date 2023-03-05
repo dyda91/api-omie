@@ -70,7 +70,7 @@
                         <td>{{row.hora_abertura}}</td> 
                         {% if row.situação == "Encerrada" %}
                         <td>
-                            <form action="estrutura_op/{{row.numero_op}}" method="post" type="hidden" >
+                            <form action="op/{{row.numero_op}}" method="post" type="hidden" >
                                 <input type="hidden" name="item" value="{{row.item}}">
                                 <input type="hidden" name="numero_op" value="{{row.numero_op}}">
                                 <input type="hidden" name="op_qtd" value="{{row.quantidade}}">

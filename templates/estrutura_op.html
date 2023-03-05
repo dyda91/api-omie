@@ -42,11 +42,11 @@
                 {%if i.situação == "Aberta"%}
                 <td>
                     <div class="icons">
-                        <div class="row{{row.id}}">
+                        <!-- <div class="row{{row.id}}">
                             <a class=" btn btn-warning btn-xs">
                                 <img src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
                             </a>
-                        </div>
+                        </div> -->
                         <div class="hide btnSave" id="btnSave">
                             <a class="editItem btn btn-info btn-xs"><img
                                     src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
@@ -87,7 +87,7 @@
         <table class="table table-secondary w-50">
             {%for row in item_recomendado_estrutura%}
         
-            
+            {{numero_lote}}
                 <form action="{{ url_for('movimento_estoque') }}" method="post">
                     <tr>                        
                     <td>{{row.item_estrutura}}</td>

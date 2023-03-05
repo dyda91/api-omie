@@ -387,7 +387,7 @@ def estrutura_op(numero_op, numero_lote):
     if not current_user.is_authenticated:
         return redirect( url_for('login'))
     op = numero_op
-    lote = numero_lote
+    lote = numero_op + "/" + numero_lote
     itens_movimentados = Movimentos_estoque.query.filter_by(op_referencia = op).all()   
     op_dados = Ops.query.filter_by(numero_op = op).all()
 
