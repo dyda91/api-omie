@@ -81,15 +81,16 @@
         {%if i.situação == "Aberta"%}
         
        
-        <form action="{{url_for('adicionar_lote')}}" method="post">
+        <!-- <form action="{{url_for('adicionar_lote')}}" method="post">
             <input type="hidden" name="op_referencia" value="{{i.numero_op}}">
             <input type="hidden" name="item" value="{{i.item}}">
             <input type="number" name="quantidade" placeholder="Quantidade do lote">
             <button type="submit" class="btn btn-success ms-2 encerraOP">Apontar lote</button>
-        </form>
-
+        </form> -->
+        <button type="button" class="btn btn-success ms-1 d-flex justify-content-end" data-bs-toggle="modal"
+                        data-bs-target="#lote_Modal">Apontar Lote</button>
         
-            
+        {% include 'lote_modal.html' %}
         {%endif%}
         {%endfor%}
     </div>
@@ -116,7 +117,6 @@
             {%endfor%}
         </div>
     </div>
-    {{op_info}}
 
 </div>
 
