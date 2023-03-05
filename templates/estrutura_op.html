@@ -6,23 +6,22 @@
 {% block body %}
 
 <div class=" p-2 w-100 table-responsive margin-top">
-
+    <h3 class="d-flex justify-content-center mt-2">Itens consumidos para a produção do lote {{lote}} referente a OP {{op}}</h3>
     <div class="input-group mb-3 d-flex justify-content-start">
         <div class="input-group-append">
             <a href="{{url_for('ordens_producao')}}" type="button" class="btn btn-success ms-2">Voltar</a>
         </div>
     </div>
-
     <table class="table">
-
         <tr class="bg-info info_estrutura">
             {%for row in op_dados%}
             <td>OP Nº = {{ row.numero_op }}</td>
+            <td>Lote Nº = {{ lote }}</td>
+            <td>Item = {{ row.item }}</td>
             <td>Item = {{ row.descrição }}</td>
             <td>Qtd. OP: = {{ row.quantidade }}</td>
             {%endfor%}
         </tr>
-
     </table>
     <div class="container_table table-responsive">
        
@@ -38,19 +37,18 @@
                 
                 <td>{{ row.item_movimento}}</td>
                 <td>{{ row.descricao}}</td>         
-                <td id="rowInput{{ row.id}}" class="hide" ><input type="number" value="{{ row.quantidade_movimento}}"></td>                       
-                <td id="row{{row.id}}" class="editItem">{{ row.quantidade_movimento}}</td>
+                <td>{{ row.quantidade_movimento}}</td>
                 {%for i in op_dados%}        
                 {%if i.situação == "Aberta"%}
                 <td>
-                    <div  class="icons" onclick="editarQuantidade(this)">
+                    <div class="icons">
                         <div class="row{{row.id}}">
                             <a class=" btn btn-warning btn-xs">
                                 <img src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
                             </a>
                         </div>
                         <div class="hide btnSave" id="btnSave">
-                            <a class="editItem btn btn-info btn-xs" onclick="salvarQuantidade()"><img
+                            <a class="editItem btn btn-info btn-xs"><img
                                     src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
                             </a>
                         </div>
@@ -70,13 +68,15 @@
         {%for i in op_dados%}
         {%if i.situação == "Aberta"%}
         <div class="border-top my-2"></div>
-        <h6>Adcionar novo item nessa OP</h6>
+        <h6>Adcionar novo item nesse lote</h6>
         <form action="{{ url_for('movimento_estoque') }}" method="post">
             <input name="item">
             <input name="quantidade">
-            <input type="hidden" name="op" value="{{ ref[0] }}">
-            <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
-            <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
+            <input type="hidden" name="op" value="{{ i.numero_op }}">
+            <input type="hidden" name="item_referencia" value="{{ i.item }}">
+            <input type="hidden" name="op_qtd" value="{{ i.quantidade }}">
+            <input type="hidden" name="numero_lote" value="{{lote}}">
+            <input type="hidden" name="id" value="{{i.id}}">
             <button type="submit" class="btn btn-success ms-2 desativarBotao" onclick="this.disabled=true;this.value='Submitting...'; this.form.submit();"><img
                 src="{{url_for('static', filename='images/plus-lg.svg')}}" alt=""></button>
         </form>
@@ -95,10 +95,10 @@
                     <input type="hidden" name="item" value="{{row.item_estrutura}}" readonly>
                     <input type="hidden" name="descricao" value="{{row.descricao_item}}" readonly>
                     <td><input name="quantidade" value="{{row.quantidade_item}}"></td>
-                    <input type="hidden" name="op" value="{{ ref[0] }}">
+                    <input type="hidden" name="op" value="{{ i.numero_op }}">
                     <input type="hidden" name="id" value="{{row.id}}">
-                    <input type="hidden" name="item_referencia" value="{{ ref[1] }}">
-                    <input type="hidden" name="op_qtd" value="{{ ref[3] }}">
+                    <input type="hidden" name="item_referencia" value="{{ i.item }}">
+                    <input type="hidden" name="numero_lote" value="{{lote}}">
                     <td>
                         <button type="submit" class="btn btn-success ms-2 desativarBotao" onclick="this.disabled=true;this.value='Submitting...'; this.form.submit();"><img
                         src="{{url_for('static', filename='images/plus-lg.svg')}}" alt=""></button>
@@ -112,27 +112,7 @@
         {%endif%}
         {%endfor%}
     </div>
-    
-    <div class="input-group mb-3 d-flex justify-content-end">
-        <div class="input-group-append">
-            {%for row in op_dados%}
-            {% if row.situação == "Encerrada" %}
-            <form action="{{url_for('encerra_op')}}" method="post">
-                <input type="hidden" name="id" value="{{row.id}}">
-                <input type="hidden" name="situacao" value="Aberta">
-                <button type="submit" class="btn btn-secondary ms-2 encerraOP">Reabrir OP</button>
-            </form>
-
-            {% else %}
-
-            <form action="{{url_for('encerra_op')}}" method="post">
-                <input type="hidden" name="id" value="{{row.id}}">
-                <input type="hidden" name="situacao" value="Encerrada">
-                <button type="submit" class="btn btn-success ms-2 encerraOP">Encerrar OP</button>
-            </form>
-            {%endif%}
-            {%endfor%}
-        </div>
+   
     </div>
 
 </div>

@@ -12,19 +12,19 @@
             <div class="m-1">
                 <h2 class="d-flex justify-content-center mt-2"><strong>Gerenciar Ops</strong></h2>
                
-                    <div class="input-group d-flex justify-content-end">
-                        <form method="POST" action="{{url_for('busca')}}" class="input-group w-100">
+                <div>
+
+                    
+
+                    <div class="input-group d-flex justify-content-end w-100">
+                        <button type="button" class="btn btn-success ms-1 d-flex justify-content-end" data-bs-toggle="modal"
+                        data-bs-target="#add_op_Modal">Abrir OP</button>
+                        <form method="POST" action="{{url_for('busca')}}" class="input-group w-25 input-group d-flex justify-content-start ms-4">
                         <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="search" aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
                         <div class="input-group-append">
                         <button class="btn btn-success ms-1" type="submit">Buscar</button>
-                    </form>
+                        </form>
                     </div>
-                    
-                    
-                    
-                    <button type="button" class="btn btn-success mb-1 mt-1" data-bs-toggle="modal"
-                        data-bs-target="#add_op_Modal">Adcionar item</button>
-                    
                 </div>
 
                 <div class="container w-100">
@@ -95,7 +95,7 @@
                                     </a>
                                 </div>
                                 <div>           
-                                    <form action="estrutura_op/{{row.numero_op}}" method="post" type="hidden" >
+                                    <form action="op/{{row.numero_op}}" method="post" type="hidden" >
                                                 <input type="hidden" name="item" value="{{row.item}}">
                                                 <input type="hidden" name="numero_op" value="{{row.numero_op}}">
                                                 <input type="hidden" name="op_qtd" value="{{row.quantidade}}">

@@ -1,7 +1,7 @@
 import requests
 from flask import Flask, render_template, flash, redirect, url_for, request, session, jsonify, json
-from datetime import date, datetime
-from models.models import Ops, Movimentos_estoque, Estrutura_op, User
+from datetime import date, datetime, timedelta
+from models.models import Ops, Movimentos_estoque, Estrutura_op, User, Lote
 from models.forms import LoginForm, RegisterForm
 from flask_login import login_user, logout_user, current_user
 from config import app, db, app_key, app_secret, bcrypt, login_manager
@@ -109,7 +109,7 @@ def busca():
 
 @app.route('/estrutura', methods = ['GET','POST'])
 def estrutura():
-    item = request.form['item']
+    item = request.form.get("item")
     if not current_user.is_authenticated:
          return redirect( url_for('login'))
     
@@ -260,26 +260,7 @@ def insert_op():
 
         flash (f'OP para o item {item} Aberta com sucesso', category='soccess')
 
-    data = {
-                "call":"ConsultarEstrutura",
-                "app_key": app_key,
-                "app_secret": app_secret,
-                "param":[{
-                    "codProduto": item
-                        }
-                ]}
-    response = requests.post(url=url_estrutura, json=data)
-    estrutura_op = response.json()
-
-    for row in estrutura_op["itens"]:
-        op = numero_op
-        qtd_unitaria = float(row.get('quantProdMalha'))
-        nova_estrutura = Estrutura_op(op_referencia=op, 
-                                    item_estrutura=row.get("codProdMalha"), 
-                                    descricao_item=row.get("descrProdMalha"),
-                                    quantidade_item=quantidade * qtd_unitaria)
-        db.session.add(nova_estrutura)
-        db.session.commit()
+   
 
 
     return redirect(url_for('ordens_producao'))
@@ -318,11 +299,10 @@ def delete(id):
 
 
 
-# ================================================================================================
+# ================================== LOTES ==============================================================
 
-
-@app.route('/estrutura_op/<numero_op>', methods = ['GET','POST'])
-def estrutura_op(numero_op):
+@app.route('/op/<numero_op>', methods = ['GET','POST'])
+def op(numero_op):
     if not current_user.is_authenticated:
         return redirect( url_for('login'))
     op = numero_op
@@ -330,9 +310,9 @@ def estrutura_op(numero_op):
     descricao = request.form.get("descricao")
     op_qtd = request.form.get("op_qtd")
     ref = [op, item, descricao, op_qtd]
-    itens_movimentados = Movimentos_estoque.query.filter_by(op_referencia = op).all()   
-    op_dados = Ops.query.filter_by(numero_op = op).all()
-     
+    lotes = Lote.query.filter_by(op_referencia = op).all()   
+    op_info = Ops.query.filter_by(numero_op = op).all()
+
     data = {
                 "call":"ConsultarEstrutura",
                 "app_key": app_key,
@@ -345,8 +325,77 @@ def estrutura_op(numero_op):
     estrutura_op = response.json()
 
     item_recomendado_estrutura = Estrutura_op.query.filter_by(op_referencia = op).all()
+     
+    
 
-    return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, estrutura_op=estrutura_op, ref=ref, item_recomendado_estrutura=item_recomendado_estrutura, op_dados=op_dados)
+    return render_template("lotes.html", lotes=lotes, ref=ref, op_info=op_info, op=op, item_recomendado_estrutura=item_recomendado_estrutura,  estrutura_op= estrutura_op)
+
+
+@app.route('/adicionar_lote', methods=['POST'])
+def adicionar_lote():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
+    item = request.form.get("item")
+    op_referencia = request.form.get("op_referencia")
+    lote = str(int(db.session.query(db.func.max(Lote.lote)).scalar() or 0) + 1)
+    numero_lote = "".join([op_referencia, "/", lote ])
+    quantidade = request.form.get("quantidade")
+    data_fabricacao = datetime.now().strftime('%d/%m/%Y')
+    data_validade = (datetime.now() + timedelta(days=30)).strftime('%d/%m/%Y')
+    novo_lote = Lote(op_referencia=op_referencia, lote=lote, numero_lote=numero_lote, quantidade=quantidade, data_fabricacao=data_fabricacao, data_validade=data_validade)
+    data = {
+                    "call":"ConsultarEstrutura",
+                    "app_key": app_key,
+                    "app_secret": app_secret,
+                    "param":[{
+                        "codProduto": item
+                            }
+                    ]}
+    response = requests.post(url=url_estrutura, json=data)
+    estrutura_op = response.json()
+
+    for row in estrutura_op["itens"]:
+        qtd_unitaria = float(row.get('quantProdMalha'))
+        nova_estrutura = Estrutura_op(op_referencia=op_referencia, 
+                                    item_estrutura=row.get("codProdMalha"), 
+                                    descricao_item=row.get("descrProdMalha"),
+                                    quantidade_item=float(quantidade) * float(qtd_unitaria))
+
+    db.session.add(nova_estrutura)    
+    db.session.add(novo_lote)
+    db.session.commit()
+
+    
+    return redirect(request.referrer)
+
+@app.route('/deleta_lote', methods=['GET', 'POST'])
+def deleta_lote():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
+    id = request.form.get("id")
+    lote = Lote.query.get(id)
+
+    db.session.delete(lote)
+    db.session.commit()   
+
+
+    return redirect(request.referrer)
+
+
+@app.route('/estrutura_op/<numero_op>/<numero_lote>', methods = ['GET','POST'])
+def estrutura_op(numero_op, numero_lote):
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
+    op = numero_op
+    lote = numero_lote
+    itens_movimentados = Movimentos_estoque.query.filter_by(op_referencia = op).all()   
+    op_dados = Ops.query.filter_by(numero_op = op).all()
+
+    item_recomendado_estrutura = Estrutura_op.query.filter_by(op_referencia = op).all()  
+    
+
+  
+    return render_template("estrutura_op.html", itens_movimentados=itens_movimentados, lote=lote, op=op, op_dados=op_dados, item_recomendado_estrutura=item_recomendado_estrutura)
 
 
 @app.route('/movimento_estoque', methods = ['GET','POST'])
@@ -358,8 +407,8 @@ def movimento_estoque():
     hora_atual = datetime.now().strftime("%H:%M")
     if request.method == 'POST':
         op_referencia = request.form.get("op")
-        
         id = request.form.get("id")
+        numero_lote = request.form.get("numero_lote")
         item_movimento = request.form.get("item")
         quantidade_movimento = float(request.form.get("quantidade"))
         item_referencia = request.form.get("item_referencia")
@@ -379,21 +428,21 @@ def movimento_estoque():
         descricao = data_resp.get("descricao")
 
         saldo = {"call":"ObterEstoqueProduto",
-                    "app_key":app_key,
-                    "app_secret":app_secret,
-                    "param":[{
-                            "cCodigo":item_movimento,
-                            "dDia": data_atual
-                }]
+                "app_key":app_key,
+                "app_secret":app_secret,
+                "param":[{
+                    "cCodigo":item_movimento,
+                    "dDia":data_atual
+                    }]
                 }
 
-        response = requests.post(url=url_estrutura, json=saldo)
+        response = requests.post(url=url_consulta_estoque, json=saldo)
         saldo_resp = response.json()
-        saldo_anterior = float(1000000)
-        # saldo = saldo_resp["listaEstoque"][0]
-        # # saldo_anterior = float(saldo.get("nSaldo"))
+        saldo = saldo_resp["listaEstoque"][0]
+        saldo_anterior = float(saldo.get("nSaldo"))
         
-        novo_movimento = Movimentos_estoque(item_movimento=item_movimento, 
+        novo_movimento = Movimentos_estoque(item_movimento = item_movimento, 
+                                            numero_lote = numero_lote,
                                             descricao=descricao, 
                                             op_referencia=op_referencia, 
                                             item_referencia=item_referencia, 
@@ -403,13 +452,16 @@ def movimento_estoque():
                                             data_movimento = data_atual,
                                             hora_movimento = hora_atual)
         if id != None:
-            deleta_item = Estrutura_op.query.get(id)
-            db.session.delete(deleta_item)
+            try:
+                deleta_item = Estrutura_op.query.get(id)
+                db.session.delete(deleta_item)
+            except:
+                pass
 
         db.session.add(novo_movimento)  
         db.session.commit()
-
-    return redirect(request.referrer)
+            
+        return redirect(request.referrer)
 
 
 @app.route('/encerra_op', methods=['GET', 'POST'])
