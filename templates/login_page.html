@@ -72,6 +72,16 @@
         border-color: #0A5EA6;
         cursor: pointer;
       }
+
+      @media screen and (max-width: 720px) {
+        .container {
+        width: 95% !important;
+        margin: 0 auto;
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 30px;
+        border-radius: 10px;
+      }
+      }
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
 </head>
