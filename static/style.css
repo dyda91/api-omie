@@ -57,6 +57,11 @@ table{
     color: #F6F9FF;
 }
 
+.posições{
+    height: 90vh;
+    width: 80%;
+}
+
 main.cards {
     display: flex;
     padding: 32px;

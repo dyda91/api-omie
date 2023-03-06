@@ -1,7 +1,7 @@
 import requests
 from flask import Flask, render_template, flash, redirect, url_for, request, session, jsonify, json
 from datetime import date, datetime, timedelta
-from models.models import Ops, Movimentos_estoque, Estrutura_op, User, Lote
+from models.models import Ops, Movimentos_estoque, Estrutura_op, User, Lote, Saldo_por_posicao
 from models.forms import LoginForm, RegisterForm
 from flask_login import login_user, logout_user, current_user
 from config import app, db, app_key, app_secret, bcrypt, login_manager
@@ -493,6 +493,39 @@ def deleta_movimento_item():
 
 
     return redirect(request.referrer)
+
+
+
+@app.route('/movimentos_posicaos', methods=['GET', 'POST'])
+def movimentos_posicaos():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
+
+    if request.method == 'POST':
+        item = request.form.get("item")
+        descricao = request.form.get("descricao")
+        quantidade = request.form.get("quantidade_lote")
+        op = request.form.get("op_lote")
+        lote = request.form.get("lote")
+        operador = request.form.get("operador")
+        posicao = request.form.get("posicao")
+
+        saldo_movimento = Saldo_por_posicao(item=item, descricao=descricao, quantidade=quantidade, op=op, lote=lote, operador=operador, posicao=posicao)
+
+        db.session.add(saldo_movimento)  
+        db.session.commit()
+
+    return redirect(url_for('posicoes_estoque'))    
+
+
+@app.route('/posicoes_estoque', methods=['GET', 'POST'])
+def posicoes_estoque():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
+    page = request.args.get('page', 1, type=int)
+    dados = Saldo_por_posicao.query.paginate(page=page,per_page=20)
+    return  render_template('posicoes_estoque.html',  posicoes = dados)
+    
 
 
 if __name__ == "__main__":
