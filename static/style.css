@@ -54,7 +54,7 @@ table{
 }
 
 .usuario{
-    color: #F6F9FF;
+    color: #080808;
 }
 
 .posições{
@@ -62,9 +62,21 @@ table{
     width: 80%;
 }
 
+.menu{
+    width: 100%; 
+}
+
 main.cards {
     display: flex;
     padding: 32px;
+}
+
+.card-menu{
+    width: 100px;
+    height: 80px;
+    background: rgb(137, 200, 243);
+    border-radius: 5px;
+    margin-left: 5px;
 }
 
 main.cards section.card {
