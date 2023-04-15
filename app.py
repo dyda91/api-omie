@@ -438,8 +438,8 @@ def movimento_estoque():
 
         response = requests.post(url=url_consulta_estoque, json=saldo)
         saldo_resp = response.json()
-        saldo = saldo_resp["listaEstoque"][0]
-        saldo_anterior = float(saldo.get("nSaldo"))
+        saldo = 10000
+        saldo_anterior = saldo
         
         novo_movimento = Movimentos_estoque(item_movimento = item_movimento, 
                                             numero_lote = numero_lote,
