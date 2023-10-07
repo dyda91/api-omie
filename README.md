@@ -9,7 +9,7 @@
 <p>  • Existe alguns armazéns cadastrados (ex: Estoque, controle de qualidade, expedição, etc..). Apos produzir uma OP total ou parcialmente o saldo do produto fabricado é salvo e um desses armazéns escolhido pelo usuário, depois disso é possivel transfirir entre todos os armazéns </p>
 <p>  • É possivel consultar a lista de itens cadastrados no ERP Omie, assim como as estruturas, saldo dos itens, e outras informaçoes atravez do consumo da API disponibilizada pelo Omie </p>
 <p>  • Sistema de login, com proteção de rotas e registro de qual usuário realizou determinadas ações no sistema </p>
-<p>  • É acessar o deploy de uma demo [NESSE LINK]([https://sistema-ytvz.onrender.com/]). Por ser um deploy free tier pode apresentar lentidão </p>
+<p>  • É acessar o deploy de uma demo no seguinte linkhttps://sistema-ytvz.onrender.com. Por ser um deploy free tier pode apresentar lentidão </p>
 
 
 <h2>PASSOS PARA EXECUTAR A APLICAÇÃO.</h2>
