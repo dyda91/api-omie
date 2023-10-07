@@ -517,6 +517,21 @@ def movimentos_posicaos():
 
     return redirect(url_for('posicoes_estoque'))    
 
+@app.route('/transferir_saldo_posicao', methods=['GET', 'POST'])
+def transferir_saldo_posicao():
+    if not current_user.is_authenticated:
+        return redirect( url_for('login'))
+    
+    if request.method == 'POST':
+        transf_lote = Saldo_por_posicao.query.get(request.form.get('id'))
+        transf_lote.posicao = request.form.get("posicao")
+
+        db.session.commit()
+        
+        flash (f'Lote transferido com sucesso', category='soccess')
+
+        return redirect(url_for('posicoes_estoque'))
+
 
 @app.route('/posicoes_estoque', methods=['GET', 'POST'])
 def posicoes_estoque():
@@ -529,4 +544,4 @@ def posicoes_estoque():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=3333, debug=True)

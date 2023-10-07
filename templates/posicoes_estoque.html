@@ -43,6 +43,7 @@
                         <th>Operador</th>                         
                         <th>Posição</th> 
                         <th>Data e Hora</th> 
+                        <th>Transferir</th> 
                     </tr>
 
 
@@ -57,7 +58,18 @@
                         <td>{{row.operador}}</td>
                         <td>{{row.posicao}}</td>
                         <td>{{row.data_hora}}</td> 
+                        <td>
+                          <div>
+                            <a href="transferir_saldo_posicao/{{row.id}}" class="editItem btn btn-info btn-xs " data-bs-toggle="modal"
+                                data-bs-target="#transferir_lote_Modal{{row.id}}"><img
+                                src="{{url_for('static', filename='images/arrow-right.svg')}}" alt="">
+                            </a>
+                            <!-- <button type="button" class="btn btn-success ms-1 d-flex justify-content-end" data-bs-toggle="modal"
+                                data-bs-target="#transferir_lote_Modal">Apontar Lote</button> -->
+                          </div>
+                        </td>
                     </tr>
+                    {% include 'transferir_lote_modal.html' %}
                     {% endfor %}
                 </table>
 
