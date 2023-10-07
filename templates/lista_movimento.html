@@ -28,25 +28,12 @@
                         <th>Id</th>
                         <th>Item</th>
                         <th>Descrição</th>
-                        <th>Cod. Família</th>
-                        <th>Desc. Família</th>  
+                        <th>Lote</th>
                         <th>Op. Ref</th>
                         <th>Item Ref.</th>
                         <th>Saldo anterior</th> 
                         <th>Qtd saída</th> 
                         <th>Saldo atual</th> 
-                        <th>Qtd. unitária</th> 
-                        <th>Id Família</th> 
-                        <th>Id Malha</th> 
-                        <th>Id Prod. Malha</th> 
-                        <th>Int. Prod malha</th> 
-                        <th>Perda</th> 
-                        <th>Peso bruto</th> 
-                        <th>peso liquido</th> 
-                        <th>Tipo</th> 
-                        <th>uAltProdMalha</th> 
-                        <th>uIncProdMalha</th>
-                        <th>unidProdMalha</th>
                         <th>Data</th>
                         <th>Hora</th>
                     </tr>
@@ -56,30 +43,16 @@
                     <tr>                      
                         <td>{{row.id}}</td>
                         <td>{{row.item_movimento}}</td>
-                        <td>{{row.descrProdMalha}}</td>
-                        <td>{{row.codFamMalha}}</td> 
-                        <td>{{row.descrFamMalha}}</td> 
+                        <td>{{row.descricao}}</td>
+                        <td>{{row.numero_lote}}</td>
                         <td>{{row.op_referencia}}</td> 
                         <td>{{row.item_referencia}}</td> 
                         <td>{{"%.2f" % row.saldo_anterior}}</td>
                         <td>{{"%.2f" % row.quantidade_movimento}}</td>
-                        <td>{{"%.2f" % row.saldo_atual}}</td>
-                        <td>{{row.quantProdMalha}}</td> 
-                        <td>{{row.idFamMalha}}</td> 
-                        <td>{{row.idMalha}}</td>  
-                        <td>{{row.idProdMalha}}</td>
-                        <td>{{row.intProdMalha}}</td>
-                        <td>{{row.percPerdaProdMalha}}</td>
-                        <td>{{row.pesoBrutoProdMalha}}</td> 
-                        <td>{{row.pesoLiqProdMalha}}</td> 
-                        <td>{{row.tipoProdMalha}}</td> 
-                        <td>{{row.uAltProdMalha}}</td> 
-                        <td>{{row.uIncProdMalha}}</td>
-                        <td>{{row.unidProdMalha}}</td>
+                        <td>{{"%.2f" % row.saldo_atual}}</td>                     
                         <td>{{row.data_movimento}}</td>
                         <td>{{row.hora_movimento}}</td> 
                     </tr>
-
                     {% endfor %}
                 </table>
 

@@ -4,29 +4,28 @@
 
 {% block body %}
 <div class="container">
-<nav class="navbar navbar-expand-lg  navbar-dark bg-dark w-100 fixed-top header">
+<nav class="navbar navbar-expand-lg  navbar-light bg-light w-100 fixed-top header  border-bottom border-2 border-dark">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand mr   -auto" href="{{url_for('index')}}">Ínicio</a>
-    
         
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('itens')}}">Lista de Itens</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('ordens_producao')}}">Controle de Ops</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('consulta_estoque')}}">Controle de Estoque</a>
-        </li>
-      </ul>
+
+          <a class="nav-link card-menu text-center" href="{{url_for('index')}}"> Ínicio</a>   
+
+          <a class="nav-link card-menu text-center" href="{{ url_for('itens')}}">Lista de Itens</a>
+     
+          <a class="nav-link card-menu text-center" href="{{ url_for('ordens_producao')}}">Controle de Ops</a>
+     
+          <a class="nav-link card-menu text-center" href="{{ url_for('consulta_estoque')}}">Controle Estoque</a>
+       
+          <a class="nav-link card-menu text-center" href="{{ url_for('posicoes_estoque')}}">Saldo posição</a>
+      
+     
       
     </div>
+    <div class="usuario"><p> Bem vindo: {{ current_user.name }} | <a href="/logout">Sair</a> </p></div>
     
-
   </nav>
 </div>
 
