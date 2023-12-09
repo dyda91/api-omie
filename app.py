@@ -127,6 +127,34 @@ def estrutura():
         
         return render_template("estrutura.html", estrutura=estrutura)
 
+@app.route('/teste_diego', methods = ['GET','POST'])
+def teste_diego():
+    
+    item = request.form.get('teste_item')
+    
+    data = {
+                "call":"ConsultarProduto",
+                "app_key": app_key,
+                "app_secret": app_secret,
+                "param":[{
+                    "codigo": item
+                        }
+                ]}
+    response = requests.post(url=url_produtos, json=data)
+    teste = response.json()
+    
+    fam = 22222
+    operacao = (fam/2)
+    
+    
+    
+    return render_template('teste.html',teste = teste, operacao = operacao)
+
+
+
+
+
+
 
 
 @app.route('/itens', methods = ['GET','POST'])
