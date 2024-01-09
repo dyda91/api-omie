@@ -42,15 +42,17 @@ class Lote(db.Model):
     lote = db.Column(db.String(50), nullable=False)
     numero_lote = db.Column(db.String(50), nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
+    peso = db.Column(db.Integer, nullable=False)
     data_fabricacao = db.Column(db.String, nullable=False)
     data_validade = db.Column(db.String, nullable=False)
 
 
-    def __init__(self, op_referencia, lote, numero_lote, quantidade, data_fabricacao, data_validade):
+    def __init__(self, op_referencia, lote, numero_lote, quantidade, peso, data_fabricacao, data_validade):
         self.op_referencia = op_referencia
         self.lote = lote
         self.numero_lote = numero_lote
         self.quantidade = quantidade
+        self.peso = quantidade
         self.data_fabricacao = data_fabricacao
         self.data_validade = data_validade
 
