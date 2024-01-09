@@ -21,10 +21,11 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 
 db.init_app(app)
-conexao = 'mysql://root:BbdF6G5G6g665e6D3-BeHAAb5-C4hHe3@mysql.railway.internal:3306/railway'
+# conexao = 'mysql://root:BbdF6G5G6g665e6D3-BeHAAb5-C4hHe3@mysql.railway.internal:3306/railway'
+
 
 migrate = Migrate(app, db)
 
 app.config['SECRET_KEY'] = 'my-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = conexao
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:BbdF6G5G6g665e6D3-BeHAAb5-C4hHe3@monorail.proxy.rlwy.net:29587/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
