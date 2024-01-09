@@ -12,19 +12,19 @@
             <div class="m-1">
                 <h2 class="d-flex justify-content-center mt-2"><strong>Gerenciar Ops</strong></h2>
                
-                    <div class="input-group d-flex justify-content-end">
-                        <form method="POST" action="{{url_for('busca')}}" class="input-group w-100">
+                <div>
+
+                    
+
+                    <div class="input-group d-flex justify-content-end w-100">
+                        <button type="button" class="btn btn-success ms-1 d-flex justify-content-end" data-bs-toggle="modal"
+                        data-bs-target="#add_op_Modal">Abrir OP</button>
+                        <form method="POST" action="{{url_for('busca')}}" class="input-group w-25 input-group d-flex justify-content-start ms-4">
                         <input type="search" class="form-control  w-25" placeholder="Pesquisar por item" name="search" aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
                         <div class="input-group-append">
                         <button class="btn btn-success ms-1" type="submit">Buscar</button>
-                    </form>
+                        </form>
                     </div>
-                    
-                    
-                    
-                    <button type="button" class="btn btn-success mb-1 mt-1" data-bs-toggle="modal"
-                        data-bs-target="#add_op_Modal">Adcionar item</button>
-                    
                 </div>
 
                 <div class="container w-100">
@@ -46,8 +46,8 @@
 
                 <table class="table table-hover table-info">
 
-                    <tr>                        
-                        <th> OP</th>
+                    <tr class="table-primary">                        
+                        <th>Nº OP</th>
                         <th>Situação</th>
                         <th>Item</th>
                         <th>Descrição</th>
@@ -60,18 +60,30 @@
 
                     {% for row in itens.items %}
                     
-                    <tr>                      
-                        <td>{{row.id}}</td>
+                    <tr class='{{"table-dark" if row.situação == "Encerrada" else ""}}'>                      
+                        <td>{{row.numero_op}}</td>
                         <td>{{row.situação}}</td>
                         <td>{{row.item}}</td>
                         <td>{{row.descrição}}</td> 
                         <td>{{row.quantidade}}</td> 
                         <td>{{row.data_abertura}}</td> 
                         <td>{{row.hora_abertura}}</td> 
+                        {% if row.situação == "Encerrada" %}
+                        <td>
+                            <form action="op/{{row.numero_op}}" method="post" type="hidden" >
+                                <input type="hidden" name="item" value="{{row.item}}">
+                                <input type="hidden" name="numero_op" value="{{row.numero_op}}">
+                                <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
+                                <input type="hidden" name="descricao" value="{{row.descrição}}">     
+                                <button type="submit" for="myForm" class="btn btn-primary btn-xs"><img
+                                src="{{url_for('static', filename='images/eye.svg')}}" alt=""></button>                           
+                            </form>
+                        </td>
+                        {% else %}
                         <td>
                             <div  class="icons">
                                 <div>
-                                    <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs" data-bs-toggle="modal"
+                                    <a href="update_op/{{row.id}}" class="editItem btn btn-warning btn-xs " data-bs-toggle="modal"
                                         data-bs-target="#edit_op_modal{{row.id}}"><img
                                         src="{{url_for('static', filename='images/pencil-fill.svg')}}" alt="">
                                     </a>
@@ -83,9 +95,9 @@
                                     </a>
                                 </div>
                                 <div>           
-                                    <form action="{{ url_for('estrutura_op') }}" method="post" type="hidden" >
+                                    <form action="op/{{row.numero_op}}" method="post" type="hidden" >
                                                 <input type="hidden" name="item" value="{{row.item}}">
-                                                <input type="hidden" name="id" value="{{row.id}}">
+                                                <input type="hidden" name="numero_op" value="{{row.numero_op}}">
                                                 <input type="hidden" name="op_qtd" value="{{row.quantidade}}">
                                                 <input type="hidden" name="descricao" value="{{row.descrição}}">     
                                                 <button type="submit" for="myForm" class="btn btn-info btn-xs"><img
@@ -94,6 +106,7 @@
                                 </div>
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
 
 
