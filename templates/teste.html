@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block title %} Lista de itens {% endblock %}
+{% block body %}
+
+
+
+<form method="POST" action="{{url_for('teste_diego')}}" class="input-group">
+    <input type="search" class="form-control" placeholder="Pesquisar por item" name="teste_item"
+        aria-label="Pesquisar por item" aria-describedby="basic-addon2" autocomplete="off">
+    <div class="input-group-append">
+        <button class="btn btn-danger" type="submit">testar</button>
+    </div>
+</form>
+
+
+
+
+<table class="table table-secondary">
+    <thead>
+      <tr>
+        <th scope="col">Codigo</th>
+        <th scope="col">Descrição</th>
+        <th scope="col">Codigo Familia</th>
+
+      </tr>
+    </thead>
+    
+    <tbody>
+      <tr>
+        <td>{{teste.codigo}}</td>
+        <th scope="row">{{teste.descricao}}</th>
+        <td>{{operacao}}</td>
+        <td><div>
+                        
+            <form action="{{url_for('deleta_lote')}}" method="post" type="hidden" >    
+                <button type="submit" class="btn btn-danger btn-xs"><img
+                    src="{{url_for('static', filename='images/trash3-fill.svg')}}" alt="">
+                </button>                           
+            </form>
+        </div></button>
+        </td>
+      </tr>
+    
+    </tbody>
+  </table>
+
+
+
+
+
+
+
+
+
+{% endblock %}
