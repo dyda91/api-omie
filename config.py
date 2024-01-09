@@ -5,7 +5,6 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 import os
 from dotenv import load_dotenv
-# import pymysql
 
 load_dotenv()
 
@@ -14,10 +13,6 @@ db = SQLAlchemy(app)
 
 app_key = os.getenv('APP_KEY')
 app_secret = os.getenv('APP_SECRET')
-# db_name = os.getenv('MYSQL_DB_NAME')
-# db_user = os.getenv('MYSQL_DB_USER')
-# db_password = os.getenv('MYSQL_DB_PASSWORD')
-# db_host = os.getenv('MYSQL_DB_HOST')
 
 conexao = "mysql://root:BbdF6G5G6g665e6D3-BeHAAb5-C4hHe3@monorail.proxy.rlwy.net:29587/railway"
 app.config['SECRET_KEY'] = 'my-secret-key'
