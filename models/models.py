@@ -15,8 +15,8 @@ class Ops(db.Model):
     item = db.Column(db.String(50))
     descrição = db.Column(db.String(255))
     quantidade = db.Column(db.Integer)
-    data_abertura = db.Column(db.String)
-    hora_abertura = db.Column(db.String)
+    data_abertura = db.Column(db.String(100))
+    hora_abertura = db.Column(db.String(100))
 
     lotes = db.relationship('Lote', backref='ops', lazy=True)
 
