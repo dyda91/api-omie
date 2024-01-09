@@ -572,4 +572,7 @@ def posicoes_estoque():
 
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+        db.session.commit()
     app.run(port=3333, debug=True)

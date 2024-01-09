@@ -176,5 +176,3 @@ class Saldo_por_posicao(db.Model):
                 'posicao': self.posicao,
                 'data_hora': data_hora_fmt}
 
-db.create_all()
-db.session.commit()
