@@ -61,8 +61,8 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 
 db.init_app(app)
-# conexao = 'sqlite:///database.db'
-conexao = "mysql://root:BbdF6G5G6g665e6D3-BeHAAb5-C4hHe3@monorail.proxy.rlwy.net:29587/railway"
+conexao = 'sqlite:///database.db'
+# conexao = "mysql://root:BbdF6G5G6g665e6D3-BeHAAb5-C4hHe3@monorail.proxy.rlwy.net:29587/railway"
 
 migrate = Migrate(app, db)
 
